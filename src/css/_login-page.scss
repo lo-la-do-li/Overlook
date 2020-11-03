@@ -1,18 +1,4 @@
 
-html {
-  height: 100%;
-}
-
-body {
-  height: 100%;
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  display: grid;
-  justify-items: center;
-  align-items: center;
-  background-color: #3a3a3a;
-}
-
 #main-holder {
   width: 50%;
   height: 70%;
@@ -57,12 +43,12 @@ body {
 }
 
 .login-form-field::placeholder {
-  color: #3a3a3a;
+  color: $dark-gray;
 }
 
 .login-form-field {
   border: none;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid $dark-gray;
   margin-bottom: 10px;
   border-radius: 3px;
   outline: none;
@@ -76,7 +62,7 @@ body {
   border-radius: 5px;
   color: white;
   font-weight: bold;
-  background-color: #3a3a3a;
+  background-color: $dark-gray;
   cursor: pointer;
   outline: none;
 }

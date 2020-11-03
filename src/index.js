@@ -8,7 +8,6 @@ import './css/styles.scss';
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 // import './images/turing-logo.png'
 
-// console.log('This is the JavaScript entry file - your code begins here.');
 
 const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-form-submit');
@@ -23,12 +22,18 @@ function grantAccess(event) {
 
   if (username === 'manager' && password === 'overlook2020') {
     alert('You have successfully logged in as a manager.');
-    // location.reload();
+    location.reload();
   }
-  else if (username === `customer${customer.id}` && password === 'overlook2020') {
+  else if (username === 'customer' && password === 'overlook2020') {
     alert('You have successfully logged in as a customer.');
     // location.reload();
+    // window.location.href = "http://localhost:8080/dashboard"
+
   } else {
-    loginErrorMsg.style.opacity = 1;
+    showLoginErrorMsg()
   }
+}
+
+function showLoginErrorMsg() {
+  loginErrorMsg.style.opacity = 1;
 }
