@@ -1,0 +1,17 @@
+/* This is an example of using Sass, otherwise plain CSS works too*/
+
+@import 'variables', 'login-page';
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: $dark-gray;
+}
