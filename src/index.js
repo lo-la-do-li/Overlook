@@ -22,13 +22,13 @@ function grantAccess(event) {
 
   if (username === 'manager' && password === 'overlook2020') {
     alert('You have successfully logged in as a manager.');
-    location.reload();
+    document.getElementById('main-holder').style.visibility = 'hidden';
   }
   else if (username === 'customer' && password === 'overlook2020') {
     alert('You have successfully logged in as a customer.');
-    // location.reload();
-    // window.location.href = "http://localhost:8080/dashboard"
 
+    document.getElementById('login-section').style.display = 'none';
+    document.querySelector('.dashboard').classList.remove('hidden');
   } else {
     showLoginErrorMsg()
   }
@@ -36,4 +36,15 @@ function grantAccess(event) {
 
 function showLoginErrorMsg() {
   loginErrorMsg.style.opacity = 1;
+}
+function w3_open() {
+  document.getElementById("main").style.marginLeft = "25%";
+  document.getElementById("mySidebar").style.width = "25%";
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("openNav").style.display = 'none';
+}
+function w3_close() {
+  document.getElementById("main").style.marginLeft = "0%";
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("openNav").style.display = "inline-block";
 }

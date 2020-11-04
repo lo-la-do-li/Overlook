@@ -1,6 +1,6 @@
 
-#main-holder {
-  width: 50%;
+#login-holder {
+  width: 30%;
   height: 70%;
   display: grid;
   justify-items: center;
@@ -8,6 +8,15 @@
   background-color: white;
   border-radius: 7px;
   box-shadow: 0px 0px 5px 2px black;
+  margin-top: 3vw;
+}
+
+#login-section {
+  display: none;
+  // display: flex;
+  justify-content: center;
+  background-color: $dark-gray;
+  height: 100vh;
 }
 
 #login-error-msg-holder {
@@ -17,7 +26,9 @@
   justify-items: center;
   align-items: center;
 }
-
+#login-header {
+  padding-top: 40px;
+}
 #login-error-msg {
   width: 23%;
   text-align: center;
@@ -40,6 +51,7 @@
   display: grid;
   justify-items: center;
   align-items: center;
+  height: 200px;
 }
 
 .login-form-field::placeholder {
