@@ -5,20 +5,93 @@
 // import './css/base.scss';
 import './css/styles.scss';
 import apiCalls from './apiCalls'
+import User from './User'
 
+
+let currentBookings;
+let availableRooms;
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 // import './images/turing-logo.png'
 Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBookingData()])
-  .then((data) => {
-    const dataSet = data.reduce((dataList, dataItem) => {
-      return dataList = {...dataList, ...dataItem};
-    }, {})
-    console.log(dataSet);
-  })
+.then((data) => {
+  const dataSet = data.reduce((dataKeys, dataValue) => {
+    return dataKeys = {...dataKeys, ...dataValue};
+  }, {})
+
+  currentBookings = dataSet.bookings;
+  availableRooms = dataSet.rooms;
+  // console.log(dataSet.bookings[1]);
+  console.log(dataSet.rooms);
+  instantiateData(data)
+})
+
+function instantiateData(data) {
+  // let users = data.users.map(user => new User);
+  // let bookingUserIDs = dataset.bookings.filter(booking => booking.userId)
+  // console.log(bookingUserIDs)
+  // console.log(users[0])
+}
 
 const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-form-submit');
 const loginErrorMsg = document.getElementById('login-error-msg');
+const travelDateButton = document.querySelector('.button');
+const travelInput = document.getElementById('travel-date');
+
+
+
+travelDateButton.addEventListener('click', getValue)
+
+function getValue() {
+  let chosenDate = travelInput.value.replace(/-/g, "/")
+
+  let roomBookings = currentBookings.filter(booking => booking.date === chosenDate)
+  let unavailableRooms = roomBookings.map(booking => booking.roomNumber)
+
+  unavailableRooms.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1));
+
+  console.log(availableRooms)
+  displayAvailableRooms()
+  // return availableRooms;
+}
+
+function displayAvailableRooms() {
+
+const roomsDisplay = document.querySelector('.rooms-available')
+roomsDisplay.innerHTML = ''
+availableRooms.forEach(room => {
+const roomCard =
+`
+<div class="w3-container">
+  <div class="room-card">
+    <div class="container">
+      <div class="room-specs">
+      <h5>${room.roomType}</h5>
+      <div class="navFlex">
+      <p><b>Room Number:</b></p>
+      <p>${room.number}</p>
+      </div>
+      <div class="navFlex">
+      <p><b>Bedsize:</b></p>
+      <p> ${room.bedSize}</p>
+      </div>
+      <div class="navFlex">
+      <p><b>Bed #:</b></p>
+      <p>${" " + room.numBeds}</p>
+      </div>
+      <div class="navFlex">
+      <p><b>Cost:</b></p>
+      <p>${" $" + room.costPerNight}</p>
+      </div>
+      <input type="button" class="book-button" value="Book">
+      </div>
+    </div>
+  </div>
+</div>
+`
+roomsDisplay.insertAdjacentHTML('afterbegin', roomCard)
+  })
+}
 
 loginButton.addEventListener('click', grantAccess);
 
