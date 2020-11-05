@@ -39,17 +39,16 @@
         <div class="container">
           <h2>Find a Room</h2>
           <form action="/action_page.php">
-          <label for="travel-date">Desired Date:</label>
-          <input type="date" id="travel-date" name="travel-date">
-          <input type="submit">
-        </form>
+            <label for="travel-date">Desired Date:</label>
+            <input type="date" id="travel-date" name="travel-date">
+            <input type="button" class="button" value="Submit">
+          </form>
         </div>
       </div>
     </div>
   </div>
 
   <div id="main">
-
     <div class="w3-teal">
       <div class="navFlex">
         <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
@@ -59,35 +58,41 @@
       </div>
     </div>
 
-    <div class="containFlex">
-    <div class="w3-container">
-      <div class="card">
+    <div class="containFlex hidden">
+      <div class="w3-container">
+        <div class="card">
+          <div class="container">
+            <h4><b>Total Spent on Bookings</b></h4>
+            <p>$200</p>
+          </div>
+        </div>
+      </div>
+      <div class="w3-container">
+        <div class="card">
+          <div class="container">
+            <h4><b>All Bookings</b></h4>
+            <p>BookingID, Date, Room#</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <div class="container">
-          <h4><b>Total Spent on Bookings</b></h4>
-          <p>$200</p>
+<!-- Rooms Available Section -->
+    <div class="rooms-available">
+      <!-- <div class="w3-container">
+        <div class="room-card">
+          <div class="container">
+            <div class="room-specs">
+            <h4><b>Available Rooms</b></h4>
+            <p>BookingID, Date, Room#</p>
+            <input type="button" class="book-button" value="Book">
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="w3-container">
-      <div class="card">
-        <!-- <img src="img_avatar.png" alt="Avatar" style="width:100%"> -->
-        <div class="container">
-          <h4><b>Current Bookings</b></h4>
-          <p>BookingID, Date, Room#</p>
-        </div>
-      </div>
+      </div> -->
     </div>
   </div>
-  </div>
-  <!-- <aside>
-  <h2>Find a Room</h2>
-  <form action="/action_page.php">
-  <label for="birthday">Desired Date:</label>
-  <input type="date" id="birthday" name="birthday">
-  <input type="submit">
-</form>
-</aside> -->
+
 </div>
 <!-- </main> -->
 <script>
