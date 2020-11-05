@@ -1,12 +1,13 @@
 // This is the JavaScript entry file - your code begins here
 // Do not delete or rename this file ********
 
-// An example of how you tell webpack to use a CSS (SCSS) file
-// import './css/base.scss';
+// IMPORT FILES
 import './css/styles.scss';
 import apiCalls from './apiCalls'
 import User from './User'
-
+import Manager from './Manager'
+import Room from './Room'
+import Booking from './Booking'
 
 let currentBookings;
 let availableRooms;
@@ -31,14 +32,6 @@ function instantiateData(data) {
   // console.log(bookingUserIDs)
   // console.log(users[0])
 }
-
-const loginForm = document.getElementById('login-form');
-const loginButton = document.getElementById('login-form-submit');
-const loginErrorMsg = document.getElementById('login-error-msg');
-const travelDateButton = document.querySelector('.button');
-const travelInput = document.getElementById('travel-date');
-
-
 
 travelDateButton.addEventListener('click', getValue)
 
@@ -92,6 +85,12 @@ const roomCard =
 roomsDisplay.insertAdjacentHTML('afterbegin', roomCard)
   })
 }
+// LOGIN SELECTORS, EventListeners, and FUNCTIONS
+const loginForm = document.getElementById('login-form');
+const loginButton = document.getElementById('login-form-submit');
+const loginErrorMsg = document.getElementById('login-error-msg');
+const travelDateButton = document.querySelector('.button');
+const travelInput = document.getElementById('travel-date');
 
 loginButton.addEventListener('click', grantAccess);
 
