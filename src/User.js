@@ -1,8 +1,8 @@
 class User {
-  constructor(id, name, bookings) {
-    this.id = id,
-    this.name = name,
-    this.bookings = bookings || []
+  constructor(customer) {
+    this.id = customer.id,
+    this.name = customer.name,
+    this.bookings = customer.bookings || []
   }
   findARoom(date, bookings, rooms) {
     return bookings.reduce((unavailableRooms, booking) => {
@@ -11,7 +11,7 @@ class User {
         unavailableRooms.push(booking.roomNumber)
       }
       else if (date !== booking.date) {
-        
+
       }
     console.log(unavailableRooms)
     return unavailableRooms

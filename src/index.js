@@ -9,8 +9,13 @@ import Manager from './Manager'
 import Room from './Room'
 import Booking from './Booking'
 
-let currentBookings;
-let availableRooms;
+let users = []
+let customers = []
+let currentBookings = []
+let availableRooms = []
+
+const travelDateButton = document.querySelector('.button');
+const travelInput = document.getElementById('travel-date');
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 // import './images/turing-logo.png'
 Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBookingData()])
@@ -21,16 +26,20 @@ Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBooking
 
   currentBookings = dataSet.bookings;
   availableRooms = dataSet.rooms;
-  // console.log(dataSet.bookings[1]);
-  console.log(dataSet.rooms);
-  instantiateData(data)
+  users = dataSet.users
+
+  console.log(Object.keys(dataSet));
+  // instantiateData(dataSet);
+  console.log(users[0]);
+  console.log(availableRooms[0]);
+  console.log(currentBookings[0]);
 })
 
 function instantiateData(data) {
-  // let users = data.users.map(user => new User);
-  // let bookingUserIDs = dataset.bookings.filter(booking => booking.userId)
-  // console.log(bookingUserIDs)
-  // console.log(users[0])
+
+  // customers = data.users.map(user => new User(user))
+  // availableRooms = data.rooms.map(room => new Room(room))
+
 }
 
 travelDateButton.addEventListener('click', getValue)
@@ -89,8 +98,7 @@ roomsDisplay.insertAdjacentHTML('afterbegin', roomCard)
 const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-form-submit');
 const loginErrorMsg = document.getElementById('login-error-msg');
-const travelDateButton = document.querySelector('.button');
-const travelInput = document.getElementById('travel-date');
+
 
 loginButton.addEventListener('click', grantAccess);
 
