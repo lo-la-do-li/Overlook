@@ -10,12 +10,16 @@ import Room from './Room'
 import Booking from './Booking'
 
 let users = []
-let customers = []
+// let customers = []
+let chosenDate;
 let currentBookings = []
 let availableRooms = []
 
-const travelDateButton = document.querySelector('.button');
-const travelInput = document.getElementById('travel-date');
+let travelDateButton = document.querySelector('.button');
+let travelInput = document.getElementById('travel-date');
+let roomsDisplay = document.querySelector('.rooms-available');
+let newBookingData;
+
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 // import './images/turing-logo.png'
 Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBookingData()])
@@ -35,17 +39,18 @@ Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBooking
   console.log(currentBookings[0]);
 })
 
-function instantiateData(data) {
-
-  // customers = data.users.map(user => new User(user))
-  // availableRooms = data.rooms.map(room => new Room(room))
-
-}
+// function instantiateData(data) {
+//
+//   // customers = data.users.map(user => new User(user))
+//   // availableRooms = data.rooms.map(room => new Room(room))
+//
+// }
 
 travelDateButton.addEventListener('click', getValue)
 
+
 function getValue() {
-  let chosenDate = travelInput.value.replace(/-/g, "/")
+  chosenDate = travelInput.value.replace(/-/g, "/")
 
   let roomBookings = currentBookings.filter(booking => booking.date === chosenDate)
   let unavailableRooms = roomBookings.map(booking => booking.roomNumber)
@@ -65,7 +70,7 @@ availableRooms.forEach(room => {
 const roomCard =
 `
 <div class="w3-container">
-  <div class="room-card">
+  <div class="room-card" id=${room.number}>
     <div class="container">
       <div class="room-specs">
       <h5>${room.roomType}</h5>
@@ -91,9 +96,24 @@ const roomCard =
   </div>
 </div>
 `
-roomsDisplay.insertAdjacentHTML('afterbegin', roomCard)
+roomsDisplay.insertAdjacentHTML('afterbegin', roomCard);
+let bookButton = document.querySelector('.book-button');
+bookButton.addEventListener('click', bookARoom)
   })
 }
+function bookARoom(event) {
+  if (event.target.classList.contains('book-button')) {
+    let roomToBook = event.target.closest('.room-card').id
+    let roomNumber = parseInt(roomToBook)
+
+    newBookingData = {"userID": 2, "date": chosenDate, "roomNumber": roomToBook}
+    // console.log(newBookingData)
+
+    apiCalls.addBookingData(newBookingData)
+  }
+}
+
+
 // LOGIN SELECTORS, EventListeners, and FUNCTIONS
 const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-form-submit');
@@ -124,14 +144,14 @@ function grantAccess(event) {
 function showLoginErrorMsg() {
   loginErrorMsg.style.opacity = 1;
 }
-function w3_open() {
-  document.getElementById("main").style.marginLeft = "25%";
-  document.getElementById("mySidebar").style.width = "25%";
-  document.getElementById("mySidebar").style.display = "block";
-  document.getElementById("openNav").style.display = 'none';
-}
-function w3_close() {
-  document.getElementById("main").style.marginLeft = "0%";
-  document.getElementById("mySidebar").style.display = "none";
-  document.getElementById("openNav").style.display = "inline-block";
-}
+// function w3_open() {
+//   document.getElementById("main").style.marginLeft = "25%";
+//   document.getElementById("mySidebar").style.width = "25%";
+//   document.getElementById("mySidebar").style.display = "block";
+//   document.getElementById("openNav").style.display = 'none';
+// }
+// function w3_close() {
+//   document.getElementById("main").style.marginLeft = "0%";
+//   document.getElementById("mySidebar").style.display = "none";
+//   document.getElementById("openNav").style.display = "inline-block";
+// }
