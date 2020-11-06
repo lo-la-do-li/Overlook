@@ -35,7 +35,6 @@
     onclick="w3_close()">Close &times;</button>
     <div class="w3-container">
       <div class="card">
-        <!-- <img src="img_avatar.png" alt="Avatar" style="width:100%"> -->
         <div class="container">
           <h2>Find a Room</h2>
           <form action="/action_page.php">
@@ -52,44 +51,49 @@
     <div class="w3-teal">
       <div class="navFlex">
         <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+
+        <button class="w3-button w3-teal w3-xlarge">Dashboard</button>
+        <button class="w3-button w3-teal w3-xlarge">Search Results</button>
+
+
         <div class="w3-container">
+
           <h2>OverLook</h2>
         </div>
       </div>
     </div>
 
-    <div class="containFlex hidden">
-      <div class="w3-container">
+    <div class="containFlex">
+      <div>
         <div class="card">
           <div class="container">
-            <h4><b>Total Spent on Bookings</b></h4>
-            <p>$200</p>
+            <h4><b>Past and Current Bookings</b></h4>
+            <ul class="w3-ul w3-border" style="width:100%; margin-bottom: 30px;">
+              <li class="w3-padding-large">Booking1</li>
+              <li class="w3-padding-large">Booking2</li>
+              <li class="w3-padding-large">Booking3</li>
+            </ul>
           </div>
         </div>
       </div>
-      <div class="w3-container">
+
+      <div>
         <div class="card">
           <div class="container">
-            <h4><b>All Bookings</b></h4>
+            <h4><b>Total Spent on Bookings</b></h4>
             <p>BookingID, Date, Room#</p>
           </div>
         </div>
       </div>
     </div>
 
-<!-- Rooms Available Section -->
-    <div class="rooms-available">
-      <!-- <div class="w3-container">
-        <div class="room-card">
-          <div class="container">
-            <div class="room-specs">
-            <h4><b>Available Rooms</b></h4>
-            <p>BookingID, Date, Room#</p>
-            <input type="button" class="book-button" value="Book">
-            </div>
-          </div>
-        </div>
-      </div> -->
+    <!-- Rooms Available Section -->
+    <div class="rooms-available-section hidden">
+      <form>
+        <input type="text" name="search" class="searchBar" placeholder="Search..">
+      </form>
+      <div class="rooms-available">
+      </div>
     </div>
   </div>
 
