@@ -10,9 +10,9 @@ import Room from './Room'
 import Booking from './Booking'
 
 //Variables
-let roomSet = []
-
+let dataSet
 let users = []
+let roomsAvail = []
 // let customers = []
 let searchResults = [];
 let chosenDate;
@@ -20,6 +20,7 @@ let currentBookings = []
 let availableRooms = []
 let newBookingData;
 let bookButton;
+let allSessionBookings = []
 
 //QuerySelectors
 let travelDateButton = document.querySelector('.button');
@@ -33,7 +34,7 @@ let sideBarButton = document.querySelector('.side-bar-btn')
 //Initial APIS
 Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBookingData()])
 .then((data) => {
-  const dataSet = data.reduce((dataKeys, dataValue) => {
+  dataSet = data.reduce((dataKeys, dataValue) => {
     return dataKeys = {...dataKeys, ...dataValue};
   }, {})
   currentBookings = dataSet.bookings;
@@ -51,12 +52,12 @@ function hideElement(className) {
 }
 
 function showElement(className) {
-   document.querySelector(`.${className}`).classList.remove('hidden')
+  document.querySelector(`.${className}`).classList.remove('hidden')
 }
 
 function instantiateData(data) {
   users = data.users.map(user => new User(user))
-  roomSet = data.rooms.map(room => new Room(room))
+  availableRooms = data.rooms.map(room => new Room(room))
 }
 
 // EVENT LISTENERS
@@ -66,6 +67,7 @@ window.addEventListener('click', buttonViewHandler)
 searchBar.addEventListener('input', searchAvailableRooms)
 // bookButton.addEventListener('click', bookARoom)
 
+//Navigation Functionality
 function buttonViewHandler(event) {
   if (event.target === sideBarButton) {
     openSideBar();
@@ -100,34 +102,44 @@ function openSideBar() {
 
 function findAvailableRooms() {
   // travelInput.innerHTML = ''
+  instantiateData(dataSet)
   chosenDate = travelInput.value.replace(/-/g, "/")
-
+  console.log(chosenDate)
   let roomBookings = currentBookings.filter(booking => booking.date === chosenDate)
+  console.log(roomBookings)
   let unavailableRooms = roomBookings.map(booking => booking.roomNumber)
-console.log(roomSet)
-  let availableRooms = roomSet
-  unavailableRooms.forEach(roomNum => availableRooms.splice(roomSet.findIndex(room => room.number === roomNum), 1));
+  console.log(unavailableRooms)
 
+  unavailableRooms.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
   console.log(availableRooms)
   console.log(chosenDate, availableRooms)
   displayAvailableRooms(availableRooms)
 }
 
 function bookARoom(event) {
+  console.log(chosenDate)
   if (event.target.classList.contains('book-button')) {
     let roomToBook = event.target.closest('.room-card').id
     let roomNumber = parseInt(roomToBook)
-
-    newBookingData = {"userID": 2, "date": chosenDate, "roomNumber": roomNumber}
+    console.log(roomToBook)
+    newBookingData = {"userID": 2, "date": chosenDate, "roomNumber": roomToBook}
     console.log(newBookingData)
     // let goodByeRoom = availableRooms.findIndex(roomToBook)
     // console.log(goodByeRoom)
+    let userBooking = new Booking(newBookingData)
+    allSessionBookings.push(userBooking)
+    console.log(userBooking)
 
-    availableRooms.forEach(room => availableRooms.splice(availableRooms.findIndex(room => room.number === roomToBook.number), 1))
+
+    //
+    // availableRooms.forEach(room => availableRooms.splice(availableRooms.findIndex(room => room.number === roomToBook.number), 1))
     console.log(availableRooms)
-    displayAvailableRooms(availableRooms)
 
-    displayNewBooking(roomToBook)
+    let newRoomCount = availableRooms.splice(availableRooms.find(room => room.number === userBooking.roomNumber), 1)
+    console.log(newRoomCount)
+    // displayAvailableRooms(availableRooms)
+
+    displayNewBooking(userBooking)
     viewCustomerDash();
 
     // apiCalls.addBookingData(newBookingData)
@@ -139,8 +151,8 @@ function searchAvailableRooms(event) {
 
   searchResults = availableRooms.reduce((searchMatches, room) => {
     if (searchInput === room.roomType) {
-    console.log(room)
-    searchMatches.push(room)
+      console.log(room)
+      searchMatches.push(room)
     }
     console.log(searchMatches)
     return searchMatches
@@ -150,54 +162,54 @@ function searchAvailableRooms(event) {
 }
 
 //MOVE TO domUpdates.js
-function displayAvailableRooms(roomSet) {
-searchBar.classList.remove('hidden')
-// roomsDisplay.innerHTML = ''
-roomSet.forEach(room => {
-const roomCard =
-`
-<div class="w3-container">
-  <div class="room-card" id=${room.number}>
+function displayAvailableRooms(roomsAvail) {
+  searchBar.classList.remove('hidden')
+  roomsDisplay.innerHTML = ''
+  roomsAvail.forEach(room => {
+    const roomCard =
+    `
+    <div class="w3-container">
+    <div class="room-card" id=${room.number}>
     <div class="container">
-      <div class="room-specs">
-      <h5>${room.roomType}</h5>
-      <div class="navFlex">
-      <p><b>Room Number:</b></p>
-      <p>${room.number}</p>
-      </div>
-      <div class="navFlex">
-      <p><b>Bedsize:</b></p>
-      <p> ${room.bedSize}</p>
-      </div>
-      <div class="navFlex">
-      <p><b>Bed #:</b></p>
-      <p> ${room.numBeds}</p>
-      </div>
-      <div class="navFlex">
-      <p><b>Cost:</b></p>
-      <p>${" $" + room.costPerNight}</p>
-      </div>
-      <input type="button" class="book-button" value="Book">
-      </div>
+    <div class="room-specs">
+    <h5>${room.roomType}</h5>
+    <div class="navFlex">
+    <p><b>Room Number:</b></p>
+    <p>${room.number}</p>
     </div>
-  </div>
-</div>
-`
-roomsDisplay.insertAdjacentHTML('afterbegin', roomCard);
-bookButton = document.querySelector('.book-button');
-bookButton.addEventListener('click', bookARoom);
+    <div class="navFlex">
+    <p><b>Bedsize:</b></p>
+    <p> ${room.bedSize}</p>
+    </div>
+    <div class="navFlex">
+    <p><b>Bed #:</b></p>
+    <p> ${room.numBeds}</p>
+    </div>
+    <div class="navFlex">
+    <p><b>Cost:</b></p>
+    <p>${" $" + room.costPerNight}</p>
+    </div>
+    <input type="button" class="book-button" value="Book">
+    </div>
+    </div>
+    </div>
+    </div>
+    `
+    roomsDisplay.insertAdjacentHTML('afterbegin', roomCard);
+    bookButton = document.querySelector('.book-button');
+    bookButton.addEventListener('click', bookARoom);
   })
 }
 
 function displayNewBooking(booking) {
   let customerBookings = document.querySelector('.user-bookings')
 
-      let bookingCard =
-      `
-      <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
-      </li>
-      `
-      customerBookings.insertAdjacentHTML('afterbegin', bookingCard)
+  let bookingCard =
+  `
+  <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
+  </li>
+  `
+  customerBookings.insertAdjacentHTML('afterbegin', bookingCard)
 }
 
 
