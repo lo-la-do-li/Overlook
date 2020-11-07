@@ -3,10 +3,10 @@ import { expect } from 'chai';
 import User from '../src/User';
 
 describe('User', () => {
-  let customer, room1, room2, room3, room4, room5, rooms, booking1, booking2, booking3, booking4, booking5, bookings;
+  let user, room1, room2, room3, room4, room5, rooms, booking1, booking2, booking3, booking4, booking5, bookings;
 
   beforeEach(() => {
-    customer = new User(9, 'Maxie Torp')
+    user = new User(9, 'Maxie Torp')
     room1 = {
       "number": 1,
       "roomType": "suite",
@@ -97,22 +97,24 @@ describe('User', () => {
   });
 
   it('should be an instance of user', () => {
-    expect(customer).to.be.an.instanceof(User);
+    expect(user).to.be.an.instanceof(User);
   });
 
   it('should have an id', () => {
-    expect(customer.id).to.equal(9);
+    expect(user.id).to.equal(9);
   });
 
   it('should have a name', () => {
-    expect(customer.name).to.equal('Maxie Torp');
+    expect(user.name).to.equal('Maxie Torp');
   });
 
   it('should have an array of bookings set to empty by default', () => {
-    expect(customer.bookings.length).to.equal(0);
+    expect(user.bookings.length).to.equal(0);
   });
-
+  it('should be able to return its first name', () => {
+    expect(user.getFirstName()).to.equal('Maxie');
+  });
   it('should be able to search for available rooms by date', () => {
-    expect(customer.findARoom('2020/02/01', bookings, rooms).to.deep.equal([room1, room2]))
+    expect(user.findARoom('2020/02/01', bookings, rooms).to.deep.equal([room1, room2]))
   })
 });

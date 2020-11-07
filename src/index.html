@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OverLook</title>
-  <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
@@ -37,7 +37,7 @@
       <div class="card">
         <div class="container">
           <h2>Find a Room</h2>
-          <form action="/action_page.php">
+          <form>
             <label for="travel-date">Desired Date:</label>
             <input type="date" id="travel-date" name="travel-date">
             <input type="button" class="button" value="Submit">
@@ -50,14 +50,13 @@
   <div id="main">
     <div class="w3-teal">
       <div class="navFlex">
-        <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+        <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn" onclick="w3_open()">&#9776;</button>
 
-        <button class="w3-button w3-teal w3-xlarge">Dashboard</button>
-        <button class="w3-button w3-teal w3-xlarge">Search Results</button>
+        <button class="customer-dash-tab w3-button w3-teal w3-xlarge">Dashboard</button>
+        <button class="search-results-tab w3-button w3-teal w3-xlarge">Search Results</button>
 
 
-        <div class="w3-container">
-
+        <div class="w3-container" style="margin-left: auto;">
           <h2>OverLook</h2>
         </div>
       </div>
@@ -66,12 +65,12 @@
     <div class="containFlex">
       <div>
         <div class="card">
-          <div class="container">
+          <div class="user-container">
             <h4><b>Past and Current Bookings</b></h4>
-            <ul class="w3-ul w3-border" style="width:100%; margin-bottom: 30px;">
+            <ul class="user-bookings w3-ul w3-border" style="width:100%; margin-bottom: 30px;">
               <li class="w3-padding-large">Booking1</li>
-              <li class="w3-padding-large">Booking2</li>
-              <li class="w3-padding-large">Booking3</li>
+              <!-- <li class="w3-padding-large">Booking2</li>
+              <li class="w3-padding-large">Booking3</li> -->
             </ul>
           </div>
         </div>
@@ -88,10 +87,16 @@
     </div>
 
     <!-- Rooms Available Section -->
-    <div class="rooms-available-section hidden">
+    <!-- <div class="rooms-available-section">
       <form>
-        <input type="text" name="search" class="searchBar" placeholder="Search..">
-      </form>
+        <input onclick="myFunction()" type="text" name="search" class="search-bar hidden" placeholder="Search..">
+      </form> -->
+      <div class="rooms-available-section">
+        <form>
+          <input type="text" name="search" class="search-bar hidden" placeholder="Search..">
+        </form>
+      <div>
+
       <div class="rooms-available">
       </div>
     </div>
