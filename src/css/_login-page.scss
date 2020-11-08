@@ -12,8 +12,8 @@
 }
 
 #login-section {
-  display: none;
-  // display: flex;
+  // display: visible;
+  display: flex;
   justify-content: center;
   background-color: $dark-gray;
   height: 100vh;

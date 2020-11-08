@@ -13,6 +13,8 @@ import Booking from './Booking'
 let dataSet
 let users = []
 let roomsAvail = []
+let userBooking
+let roomToBook
 // let customers = []
 let searchResults = [];
 let chosenDate;
@@ -47,6 +49,10 @@ Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBooking
   console.log(currentBookings[0]);
 })
 
+function onLoadHandler() {
+  hideElement('dashboard');
+}
+
 function hideElement(className) {
   document.querySelector(`.${className}`).classList.add('hidden')
 }
@@ -61,6 +67,7 @@ function instantiateData(data) {
 }
 
 // EVENT LISTENERS
+window.addEventListener('load', onLoadHandler)
 travelDateButton.addEventListener('click', findAvailableRooms)
 sideBarButton.addEventListener('click', openSideBar)
 window.addEventListener('click', buttonViewHandler)
@@ -78,22 +85,26 @@ function buttonViewHandler(event) {
   if (event.target.classList.contains('search-results-tab')) {
     viewSearchRooms();
   }
+  if (event.target.classList.contains('log-out-btn')) {
+    logOut();
+  }
 }
-
+function logOut() {
+  hideElement('dashboard');
+  document.getElementById('login-section').style.display = 'flex';
+}
 function viewCustomerDash() {
   showElement('containFlex');
   hideElement('rooms-available');
   hideElement('search-bar');
   w3_close();
 }
-
 function viewSearchRooms() {
   hideElement('containFlex');
   showElement('rooms-available');
   showElement('search-bar');
   w3_open();
 }
-
 function openSideBar() {
   searchBar.classList.remove('hidden')
   hideElement('containFlex')
@@ -119,31 +130,42 @@ function findAvailableRooms() {
 function bookARoom(event) {
   console.log(chosenDate)
   if (event.target.classList.contains('book-button')) {
-    let roomToBook = event.target.closest('.room-card').id
-    let roomNumber = parseInt(roomToBook)
+    roomToBook = event.target.closest('.room-card').id
+    // let roomNumber = parseInt(roomToBook)
     console.log(roomToBook)
     newBookingData = {"userID": 2, "date": chosenDate, "roomNumber": roomToBook}
     console.log(newBookingData)
     // let goodByeRoom = availableRooms.findIndex(roomToBook)
     // console.log(goodByeRoom)
-    let userBooking = new Booking(newBookingData)
+    userBooking = new Booking(newBookingData)
     allSessionBookings.push(userBooking)
-    console.log(userBooking)
+    console.log(allSessionBookings)
 
 
-    //
-    // availableRooms.forEach(room => availableRooms.splice(availableRooms.findIndex(room => room.number === roomToBook.number), 1))
     console.log(availableRooms)
+    // updateAvailBookings()
 
-    let newRoomCount = availableRooms.splice(availableRooms.find(room => room.number === userBooking.roomNumber), 1)
+    let newRoomCount = availableRooms.splice(availableRooms.findIndex(room => room.number === userBooking.roomNumber), 1)
     console.log(newRoomCount)
-    // displayAvailableRooms(availableRooms)
-
+    displayAvailableRooms(availableRooms)
+    console.log(availableRooms)
+    // allSessionBookings.push(newRoomCount.number)
+    // updateAvailBookings()
     displayNewBooking(userBooking)
     viewCustomerDash();
 
     // apiCalls.addBookingData(newBookingData)
   }
+}
+
+function updateAvailBookings() {
+  instantiateData(dataSet)
+  console.log(availableRooms)
+  console.log(allSessionBookings)
+  // let roomBookings = currentBookings.filter(booking => booking.date === chosenDate)
+  // console.log(roomBookings)
+  // let unavailbook = roomBookings.map(booking => booking.roomNumber)
+  // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
 }
 
 function searchAvailableRooms(event) {
@@ -228,13 +250,14 @@ function grantAccess(event) {
 
   if (username === 'manager' && password === 'overlook2020') {
     alert('You have successfully logged in as a manager.');
-    document.getElementById('main-holder').style.visibility = 'hidden';
+    document.getElementById('login-section').style.display = 'none';
+    showElement('dashboard')
   }
   else if (username === 'customer' && password === 'overlook2020') {
     alert('You have successfully logged in as a customer.');
 
     document.getElementById('login-section').style.display = 'none';
-    document.querySelector('.dashboard').classList.remove('hidden');
+    showElement('dashboard');
   } else {
     showLoginErrorMsg()
   }
