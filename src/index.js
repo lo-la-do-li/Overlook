@@ -15,6 +15,7 @@ let users = []
 let roomsAvail = []
 let userBooking
 let roomToBook
+let numberOfRooms
 // let customers = []
 let searchResults = [];
 let chosenDate;
@@ -29,7 +30,8 @@ let travelDateButton = document.querySelector('.button');
 let travelInput = document.getElementById('travel-date');
 let roomsDisplay = document.querySelector('.rooms-available');
 let roomsAvailableSection = document.querySelector('.rooms-available-section')
-// let customerDashBoard = document.querySelector('.containFlex')
+// let customerDashBoard = document.querySelector('.customer-dashboard')
+// let managerDashboard = document.querySelector('.manager-dashboard')
 let searchBar = document.querySelector('.search-bar')
 let sideBarButton = document.querySelector('.side-bar-btn')
 
@@ -68,7 +70,7 @@ function instantiateData(data) {
 
 // EVENT LISTENERS
 window.addEventListener('load', onLoadHandler)
-travelDateButton.addEventListener('click', findAvailableRooms)
+travelDateButton.addEventListener('click', travelSearchFunction)
 sideBarButton.addEventListener('click', openSideBar)
 window.addEventListener('click', buttonViewHandler)
 searchBar.addEventListener('input', searchAvailableRooms)
@@ -111,10 +113,15 @@ function openSideBar() {
   // customerDashBoard.classList.add('hidden')
 }
 
-function findAvailableRooms() {
-  // travelInput.innerHTML = ''
-  instantiateData(dataSet)
+function travelSearchFunction () {
   chosenDate = travelInput.value.replace(/-/g, "/")
+  findAvailableRooms()
+
+}
+
+function findAvailableRooms() {
+  instantiateData(dataSet)
+  // travelInput.innerHTML = ''
   console.log(chosenDate)
   let roomBookings = currentBookings.filter(booking => booking.date === chosenDate)
   console.log(roomBookings)
@@ -122,10 +129,18 @@ function findAvailableRooms() {
   console.log(unavailableRooms)
 
   unavailableRooms.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
+  numberOfRooms = availableRooms.length
+  displayNumberOfRooms(numberOfRooms)
   console.log(availableRooms)
   console.log(chosenDate, availableRooms)
   displayAvailableRooms(availableRooms)
 }
+
+function displayNumberOfRooms(number) {
+  document.querySelector('.totalRooms').innerHTML = number
+
+}
+
 
 function bookARoom(event) {
   console.log(chosenDate)
@@ -248,16 +263,33 @@ function grantAccess(event) {
   const username = loginForm.username.value;
   const password = loginForm.password.value;
 
+  function getTodayDate() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '/' + mm + '/' + dd;
+    return today
+  }
+
   if (username === 'manager' && password === 'overlook2020') {
     alert('You have successfully logged in as a manager.');
     document.getElementById('login-section').style.display = 'none';
-    showElement('dashboard')
+    showElement('dashboard');
+    hideElement('rooms-available-section');
+    // hideElement('customer-dashboard');
+
+    // chosenDate = getTodayDate()
+    chosenDate = "2020/02/05"
+    findAvailableRooms()
   }
   else if (username === 'customer' && password === 'overlook2020') {
     alert('You have successfully logged in as a customer.');
 
     document.getElementById('login-section').style.display = 'none';
     showElement('dashboard');
+    showElement('customer-dashboard');
+    hideElement('manager-dashboard');
   } else {
     showLoginErrorMsg()
   }
