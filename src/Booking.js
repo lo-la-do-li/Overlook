@@ -4,7 +4,7 @@ class Booking {
     this.userId = booking.userID;
     this.date = booking.date;
     this.roomNumber = booking.roomNumber;
-    this.roomServiceCharges = [];
+    this.roomServiceCharges = booking.roomServiceCharges || [];
   }
   // getUserId() {
   // return this.users.find(user => user.id === id)
