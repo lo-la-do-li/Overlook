@@ -1,24 +1,41 @@
-/* This is an example of using Sass, otherwise plain CSS works too*/
 
 @import 'variables', 'login-page';
 
-html {
-  height: 100%;
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+html, body {
+    font-family: Verdana,sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
 }
 
 header {
     text-align: center;
     height: 9vw;
 }
-body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-}
+// body {
+//   font-family: 'Montserrat', sans-serif;
+// }
 
 main {
-  background-color: $dark-gray;
+  background-color: white;
   display: block;
-  height: 100%
+  height: 100vh
+}
+button, input {
+    overflow: visible;
+}
+button, select {
+    text-transform: none;
+}
+button, input, select, textarea, optgroup {
+    font: inherit;
+    margin: 0;
+}
+.w3-main, #main {
+    transition: margin-left .4s;
 }
 .card {
   margin-top: 20px;
@@ -32,7 +49,7 @@ main {
   height: 80px;
 }
 .button {
-  background-color: #009688; /* Green */
+  background-color: #009688;
   border: none;
   color: white;
   padding: 5px 20px;
@@ -45,7 +62,7 @@ main {
   border-radius: 4px;
 }
 .book-button {
-  background-color: #009688; /* Green */
+  background-color: #009688;
   border: none;
   color: white;
   padding: 5px 20px;
@@ -60,7 +77,7 @@ main {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.container {
+.container, .manager-container {
   padding: 2px 16px;
 }
 
@@ -74,6 +91,11 @@ main {
   flex-direction: row;
   justify-content: space-between;
   margin-top: 13px;
+}
+
+.total-rooms, .percent-booked, .total-revenue {
+  font-size: 50px;
+  text-align: center;
 }
 
 .containFlex {
@@ -90,10 +112,6 @@ main {
   flex-direction: column;
   justify-content: space-evenly;
 }
-// #dashboard {
-//   visibility: hidden;
-// }
-
 
 .hidden {
   display: none;
@@ -104,15 +122,15 @@ main {
 }
 
 // SIDEBAR
-// .w3-sidebar {
-//   height:100%;
-//   width:200px;
-//   background-color: #fff;
-//   position: fixed;
-//   z-index: 1;
-//   overflow: auto;
-// }
-//
+.w3-sidebar {
+  height:100%;
+  width:200px;
+  background-color: #fff;
+  position: fixed;
+  z-index: 1;
+  overflow: auto;
+}
+// // *Makes navBar not go over all the way
 // .w3-bar-block {
 //   width: 100%;
 //   display: block;
@@ -122,87 +140,111 @@ main {
 //   white-space: normal;
 //   float: none;
 //   outline: 0;
-//   min-width: 100%;
 // }
-//
-// .w3-card {
-//   box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)
-// }
-// // .w3-animate-left{position:relative;animation:animateleft 0.4s}
-// // @keyframes animateleft{from{left:-300px;opacity:0} to{left:0;opacity:1}}
-//
-// .w3-animate-left {
-//   position: relative;
-//   animation: animateleft 0.4s
-// }
-//
-// @keyframes animateleft {
-//     from {
-//       left: -300px;
-//       opacity: 0
-//     } to {
-//       left: 0;
-//       opacity: 1
-//     }
-//   }
-//
-// //Sidebar BUTTON
-// .w3-bar-item {
-//   padding: 8px 16px;
-//   float: left;
-//   width: auto;
-//   border: none;
-//   display: block;
-//   outline: 0;
-//   // @extend .w3-bar-block;
-//   // width: auto;
-//   text-align: center;
-// }
-//
-// .w3-button {
-//   border: none;
-//   display: inline-block;
-//   padding: 8px 16px;
-//   vertical-align: middle;
-//   overflow: hidden;
-//   text-decoration: none;
-//   color: inherit;
-//   background-color: inherit;
-//   text-align:center;
-//   cursor: pointer;
-//   white-space: nowrap;
-//   // -webkit-touch-callout: none;
-//   // -webkit-user-select: none;
-//   // -khtml-user-select: none;
-//   // -moz-user-select: none;
-//   // -ms-user-select: none;
-//   // user-select: none
-// }
-//
-// .w3-large {
-//   font-size: 18px;
-// }
-//
-// // w3_close()
-//
-// // CARDS
-// .w3-container, .w3-container:before, .w3-container:after {
-//   padding: 0.01em 16px;
-//   content: " ";
-//   display: table;
-//   clear: both
-// }
-//
-// .w3-teal,.w3-hover-teal:hover {
-//   color: #fff;
-//   background-color: #009688;
-// }
-//
-// .w3-xlarge {
-//   font-size: 24px;
-// }
-//
-// #openNav {
-//
-// }
-//
+
+
+.w3-animate-left {
+  position: absolute;
+  animation: animateleft 0.4s
+}
+
+@keyframes animateleft{
+  from {left:-300px; opacity:0}
+  to {left:0; opacity:1}
+}
+//Sidebar BUTTON
+.w3-bar-item {
+  padding: 8px 16px;
+  float: left;
+  width: auto;
+  border: none;
+  display: block;
+  outline: 0;
+  // @extend .w3-bar-block;
+  width: auto;
+  text-align: center;
+}
+
+.w3-button {
+  border: none;
+  display: inline-block;
+  padding: 8px 16px;
+  vertical-align: middle;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background-color: inherit;
+  text-align:center;
+  cursor: pointer;
+  white-space: nowrap;
+  // -webkit-touch-callout: none;
+  // -webkit-user-select: none;
+  // -khtml-user-select: none;
+  // -moz-user-select: none;
+  // -ms-user-select: none;
+  // user-select: none
+}
+.user-container {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.w3-border {
+    border: 1px solid #ccc!important;
+}
+
+.w3-ul, .w3-border, .user-bookings {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0;
+}
+
+.w3-ul li:last-child {
+    border-bottom: none;
+}
+
+.w3-large {
+  font-size: 18px;
+}
+
+// CARDS
+.w3-card {
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)
+}
+
+.w3-container, .w3-container:before, .w3-container:after {
+  padding: 0.01em 16px;
+  content: " ";
+  display: table;
+  clear: both
+}
+
+.w3-teal,.w3-hover-teal:hover {
+  color: #fff;
+  background-color: #009688;
+}
+
+.w3-xlarge {
+  font-size: 24px;
+}
+
+// Search bar
+.search-bar {
+  width: 50%;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  margin-top: 20px;
+  margin-left: 30px;
+  // background-image: url('searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+.searchBar:focus {
+  width: 95%;
+}
