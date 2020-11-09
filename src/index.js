@@ -60,7 +60,7 @@ function onLoadHandler() {
 }
 
 function instantiateData(data) {
-  const customers = data.users.map(user => new User(user));
+  const customers = data.users.map(customer => new User(customer));
   const rooms = data.rooms.map(room => new Room(room));
   const bookings = data.bookings.map(booking => new Booking(booking));
   allCustomers = customers
@@ -288,14 +288,37 @@ function displayAvailableRooms(roomSet) {
 }
 
 function displayNewBooking(booking) {
-  let customerBookings = document.querySelector('.user-bookings')
-  
+  let userBookings = document.querySelector('.user-bookings')
+
   let bookingCard =
   `
   <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
   </li>
   `
-  customerBookings.insertAdjacentHTML('afterbegin', bookingCard)
+  userBookings.insertAdjacentHTML('afterbegin', bookingCard)
+}
+
+function displayCustomerBookings(bookingSet) {
+  let userBookings = document.querySelector('.user-bookings')
+  sortBookingsByDate(bookingSet)
+  bookingSet.forEach(booking => {
+
+  let bookingCard =
+  `
+  <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
+  </li>
+  `
+  userBookings.insertAdjacentHTML('afterbegin', bookingCard)
+  })
+}
+
+function getTodayDate() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var yyyy = today.getFullYear();
+  today = yyyy + '/' + mm + '/' + dd;
+  return today
 }
 
 
@@ -304,22 +327,29 @@ const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-form-submit');
 const loginErrorMsg = document.getElementById('login-error-msg');
 
-
 loginButton.addEventListener('click', grantAccess);
 
+function compileUserBookings(idNum) {
+  const customer = hotel.allCustomers.find(customer => customer.id === idNum)
+  console.log(customer)
+  const customerBookings = hotel.allBookings.filter(booking => customer.id === booking.userId)
+  customer.bookings = sortBookingsByDate(customerBookings)
+  console.log(customer.bookings)
+  return customer.bookings
+
+}
+function sortBookingsByDate(bookingSet) {
+  const bookingsByDate = bookingSet.sort((bookingA, bookingB) => {
+     return new Date(bookingA.date) - new Date(bookingB.date)
+  })
+  console.log(bookingsByDate)
+  return bookingsByDate
+}
 function grantAccess(event) {
   event.preventDefault();
   const username = loginForm.username.value;
   const password = loginForm.password.value;
 
-  function getTodayDate() {
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0');
-    var yyyy = today.getFullYear();
-    today = yyyy + '/' + mm + '/' + dd;
-    return today
-  }
 
   if (username === 'manager' && password === 'overlook2020') {
     alert('You have successfully logged in as a manager.');
@@ -328,17 +358,21 @@ function grantAccess(event) {
     hideElement('rooms-available-section');
     // hideElement('customer-dashboard');
 
-    // todayDate = getTodayDate();
+    todayDate = getTodayDate();
     chosenDate = "2020/02/01";
     getHotelStatsByDate(chosenDate)
-  }
-  else if (username === 'customer' && password === 'overlook2020') {
+
+  } else if (username === 'customer' && password === 'overlook2020') {
     alert('You have successfully logged in as a customer.');
 
     document.getElementById('login-section').style.display = 'none';
     showElement('dashboard');
     showElement('customer-dashboard');
     hideElement('manager-dashboard');
+    let customerBookings = compileUserBookings(7)
+    // displayCustomerBookings(processedBookings)
+    displayCustomerBookings(customerBookings)
+
   } else {
     showLoginErrorMsg()
   }
