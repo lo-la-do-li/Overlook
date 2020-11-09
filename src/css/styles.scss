@@ -1,13 +1,9 @@
-/* This is an example of using Sass, otherwise plain CSS works too*/
 
 @import 'variables', 'login-page';
 
 *, *:before, *:after {
     box-sizing: inherit;
 }
-// html {
-//   height: 100%;
-// }
 
 html, body {
     font-family: Verdana,sans-serif;
@@ -20,7 +16,6 @@ header {
     height: 9vw;
 }
 // body {
-//   margin: 0;
 //   font-family: 'Montserrat', sans-serif;
 // }
 
@@ -54,7 +49,7 @@ button, input, select, textarea, optgroup {
   height: 80px;
 }
 .button {
-  background-color: #009688; /* Green */
+  background-color: #009688;
   border: none;
   color: white;
   padding: 5px 20px;
@@ -67,7 +62,7 @@ button, input, select, textarea, optgroup {
   border-radius: 4px;
 }
 .book-button {
-  background-color: #009688; /* Green */
+  background-color: #009688;
   border: none;
   color: white;
   padding: 5px 20px;
@@ -90,9 +85,6 @@ button, input, select, textarea, optgroup {
   display: flex;
   flex-direction: row;
 }
-// *, *:before, *:after {
-//     box-sizing: inherit;
-// }
 
 .room-specs {
   display: flex;
@@ -120,12 +112,6 @@ button, input, select, textarea, optgroup {
   flex-direction: column;
   justify-content: space-evenly;
 }
-// #dashboard {
-//   visibility: hidden;
-// }
-// #main {
-//   margin-left: 0;
-// }
 
 .hidden {
   display: none;
@@ -134,8 +120,8 @@ button, input, select, textarea, optgroup {
 #blockColorblindContent {
   display: none
 }
-//
-// // SIDEBAR
+
+// SIDEBAR
 .w3-sidebar {
   height:100%;
   width:200px;
@@ -154,12 +140,8 @@ button, input, select, textarea, optgroup {
 //   white-space: normal;
 //   float: none;
 //   outline: 0;
-//   min-width: 100%;
 // }
-// //
-.w3-card {
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)
-}
+
 
 .w3-animate-left {
   position: absolute;
@@ -179,7 +161,7 @@ button, input, select, textarea, optgroup {
   display: block;
   outline: 0;
   // @extend .w3-bar-block;
-  // width: auto;
+  width: auto;
   text-align: center;
 }
 
@@ -195,20 +177,40 @@ button, input, select, textarea, optgroup {
   text-align:center;
   cursor: pointer;
   white-space: nowrap;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none
+  // -webkit-touch-callout: none;
+  // -webkit-user-select: none;
+  // -khtml-user-select: none;
+  // -moz-user-select: none;
+  // -ms-user-select: none;
+  // user-select: none
 }
-// //
+.user-container {
+  width: 100%;
+  margin-bottom: 30px;
+}
+.w3-border {
+    border: 1px solid #ccc!important;
+}
+
+.w3-ul, .w3-border, .user-bookings {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0;
+}
+
+.w3-ul li:last-child {
+    border-bottom: none;
+}
+
 .w3-large {
   font-size: 18px;
 }
-// //
-// //
-// // CARDS
+
+// CARDS
+.w3-card {
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)
+}
+
 .w3-container, .w3-container:before, .w3-container:after {
   padding: 0.01em 16px;
   content: " ";
@@ -225,11 +227,7 @@ button, input, select, textarea, optgroup {
   font-size: 24px;
 }
 
-//
-// #openNav {
-//
-// }
-// // Search bar
+// Search bar
 .search-bar {
   width: 50%;
   box-sizing: border-box;

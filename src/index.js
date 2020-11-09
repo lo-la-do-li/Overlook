@@ -1,5 +1,3 @@
-// This is the JavaScript entry file - your code begins here
-// Do not delete or rename this file ********
 
 // IMPORT FILES
 import './css/styles.scss';
@@ -11,19 +9,17 @@ import Booking from './Booking'
 
 //Variables
 let dataSet;
-// let customers = []
 let allBookings;
 let allCustomers;
 let allRooms;
 let hotel;
 
 let availableRooms = []
-let bookingRoomNumbers = []
 let currentBookings = []
+let bookingRoomNumbers = []
 let bookedRooms = []
-// let availableRooms = []
-// let currentBookings = []
-// let roomsAvail = [];
+
+
 let userBooking;
 let roomToBook;
 let numberOfRooms;
@@ -54,14 +50,9 @@ Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBooking
   dataSet = data.reduce((dataType, dataValue) => {
     return dataType = {...dataType, ...dataValue};
   }, {})
-  // currentBookings = dataSet.bookings;
-  // availableRooms = dataSet.rooms;
-  // users = dataSet.users
+
   instantiateData(dataSet);
   console.log(hotel)
-  // let roomTypes = new Set(availableRooms.map(room => room.roomType))
-  // console.log(roomTypes);
-  // console.log(currentBookings[0]);
 })
 
 function onLoadHandler() {
@@ -78,10 +69,6 @@ function instantiateData(data) {
   hotel = new HotelManagement(allCustomers, allRooms, allBookings);
 }
 
-// function instantiateData(data) {
-//   customers = data.users.map(user => new User(user))
-//   availableRooms = data.rooms.map(room => new Room(room))
-// }
 
 // EVENT LISTENERS
 window.addEventListener('load', onLoadHandler)
@@ -114,13 +101,13 @@ function viewCustomerDash() {
   showElement('containFlex');
   hideElement('rooms-available');
   hideElement('search-bar');
-  w3_close();
+  // w3_close();
 }
 function viewSearchRooms() {
   hideElement('containFlex');
   showElement('rooms-available');
   showElement('search-bar');
-  w3_open();
+  // w3_open();
 }
 function openSideBar() {
   searchBar.classList.remove('hidden')
@@ -136,9 +123,8 @@ function searchRoomsByDate () {
 //BOOKINGS AND ROOMS
 function filterBookingsByDate(date) {
 return hotel.allBookings.filter(booking => booking.date === date)
-  // console.log(currentBookings)
 }
-//
+
 function getTotalRevenue() {
   let totalDailyRevenue = bookedRooms.reduce((totalRevenue, room) => {
     totalRevenue += room.costPerNight
@@ -146,7 +132,7 @@ function getTotalRevenue() {
     return totalRevenue
   }, 0)
   console.log('total Daily Revenue', totalDailyRevenue)
-  return totalDailyRevenue;
+  return totalDailyRevenue.toFixed(2);
 }
 
 function getRoomsFromBookings(bookings) {
@@ -156,18 +142,9 @@ function getRoomsFromBookings(bookings) {
      return acc
   },[])
   return bookedRooms
-
-  // bookingRoomNumbers = bookings.map(booking => booking.roomNumber)
-  // console.log('bookingRoomNumbers:', bookingRoomNumbers)
-  // console.log('hotel.allRooms:', hotel.allRooms)
 }
-  // let result = bookingRoomNumbers.forEach(roomNum => {
-  //   return hotel.allRooms.find(room => room.number === roomNum))
-    // return result
-// })
-// //   console.log(result)
-// }
-function gotHotelStatsByDate(date) {
+
+function getHotelStatsByDate(date) {
   currentBookings = filterBookingsByDate(chosenDate)
   getRoomsFromBookings(currentBookings)
   let totalRevenue = getTotalRevenue()
@@ -182,13 +159,10 @@ function gotHotelStatsByDate(date) {
 
   displayHotelStats(numberOfBookedRooms, percentBooked, totalRevenue)
 }
+
 function findAvailableRooms() {
-  // let initNumberOfRooms = hotel.allRooms.length
   console.log('hotel.allRooms', hotel.allRooms)
-  // console.log('initial number of rooms:', initNumberOfRooms)
-  // instantiateData(dataSet)
-  // console.log('available rooms in findAvailRooms', availableRooms)
-  // console.log(initNumberOfRooms)
+
   currentBookings = filterBookingsByDate(chosenDate)
   console.log('current bookings:', currentBookings)
 
@@ -205,16 +179,6 @@ function findAvailableRooms() {
     },[])
   console.log('available rooms:', availableRooms)
     return availableRooms
-
-  // availableRooms = bookingRoomNumbers.forEach(roomNum => hotel.allRooms.splice(hotel.allRooms.findIndex(room => room.number === roomNum),1))
-  // availableRooms.push(hotel.allRooms)
-
-  // let percentBooked = Math.floor(((initNumberOfRooms - numberOfRooms)/ initNumberOfRooms * 100))
-
-  // displayHotelStats(numberOfRooms, percentBooked)
-  // getTotalRevenue(chosenDate)
-
-  displayAvailableRooms(availableRooms)
 }
 
 function bookARoom(event) {
@@ -247,12 +211,9 @@ function bookARoom(event) {
 }
 
 function updateAvailBookings() {
-  instantiateData(dataSet)
+  // instantiateData(dataSet)
   console.log(availableRooms)
   console.log(allSessionBookings)
-  // let roomBookings = currentBookings.filter(booking => booking.date === chosenDate)
-  // console.log(roomBookings)
-  // let unavailbook = roomBookings.map(booking => booking.roomNumber)
   // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
 }
 
@@ -297,7 +258,7 @@ function displayAvailableRooms(roomSet) {
     <div class="room-card" id=${room.number}>
     <div class="container">
     <div class="room-specs">
-    <h5>${room.roomType}</h5>
+    <h3>${room.roomType}</h3>
     <div class="navFlex">
     <p><b>Room Number:</b></p>
     <p>${room.number}</p>
@@ -328,7 +289,7 @@ function displayAvailableRooms(roomSet) {
 
 function displayNewBooking(booking) {
   let customerBookings = document.querySelector('.user-bookings')
-
+  
   let bookingCard =
   `
   <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
@@ -368,10 +329,8 @@ function grantAccess(event) {
     // hideElement('customer-dashboard');
 
     // todayDate = getTodayDate();
-    chosenDate = "2020/02/05";
-    // findAvailableRooms();
-    // getTotalRevenue(chosenDate);
-    gotHotelStatsByDate(chosenDate)
+    chosenDate = "2020/02/01";
+    getHotelStatsByDate(chosenDate)
   }
   else if (username === 'customer' && password === 'overlook2020') {
     alert('You have successfully logged in as a customer.');
@@ -387,15 +346,4 @@ function grantAccess(event) {
 
 function showLoginErrorMsg() {
   loginErrorMsg.style.opacity = 1;
-}
-function w3_open() {
-  document.getElementById("main").style.marginLeft = "25%";
-  document.getElementById("mySidebar").style.width = "25%";
-  document.getElementById("mySidebar").style.display = "block";
-  document.getElementById("openNav").style.display = 'none';
-}
-function w3_close() {
-  document.getElementById("main").style.marginLeft = "0%";
-  document.getElementById("mySidebar").style.display = "none";
-  document.getElementById("openNav").style.display = "inline-block";
 }
