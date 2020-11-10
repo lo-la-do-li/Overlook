@@ -19,7 +19,6 @@ let currentBookings = []
 let bookingRoomNumbers = []
 let bookedRooms = []
 
-
 let userBooking;
 let roomToBook;
 let numberOfRooms;
@@ -27,6 +26,7 @@ let numberOfRooms;
 let searchResults = [];
 let chosenDate;
 let todayDate;
+let customerSearchResults = [];
 
 let newBookingData;
 let bookButton;
@@ -75,7 +75,8 @@ window.addEventListener('load', onLoadHandler)
 travelDateButton.addEventListener('click', searchRoomsByDate)
 sideBarButton.addEventListener('click', openSideBar)
 window.addEventListener('click', buttonViewHandler)
-searchBar.addEventListener('input', searchAvailableRooms)
+// searchBar.addEventListener('input', searchAvailableRooms)
+searchBar.addEventListener('input', searchCustomersByName)
 // bookButton.addEventListener('click', bookARoom)
 
 // VIEW HANDLERS & Navigation Functionality
@@ -120,7 +121,7 @@ function searchRoomsByDate () {
 function managerViewHandler() {
   document.getElementById('login-section').style.display = 'none';
   showElement('dashboard');
-  hideElement('rooms-available-section');
+  // hideElement('rooms-available-section');
 }
 function customerViewHandler() {
   document.getElementById('login-section').style.display = 'none';
@@ -208,6 +209,27 @@ function updateAvailBookings() {
   console.log(allSessionBookings)
   // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
 }
+// MANAGER FUNCTIONALITY: SEARCH USERS AND BOOK -----------------------------------
+
+function searchCustomersByName (event) {
+  let searchNameInput = event.target.value.toLowerCase()
+    customerSearchResults = hotel.allCustomers.reduce((searchMatches, customer) => {
+    if (searchNameInput === customer.getFirstName().toLowerCase()) {
+      searchMatches.push(customer)
+       // console.log(searchMatches)
+       return searchMatches
+    } else if (!searchNameInput) {
+      console.log('no matches:', hotel.allCustomers)
+      return hotel.allCustomers
+    }
+    return searchMatches
+  }, [])
+  console.log(customerSearchResults)
+  // displayCustomers(customerSearchResults)
+  return customerSearchResults;
+}
+
+
 
 //MOVE TO domUpdates.js ------------------------------------------------
 
@@ -238,30 +260,30 @@ function displayAvailableRooms(roomSet) {
     const roomCard =
     `
     <div class="w3-container">
-    <div class="room-card" id=${room.number}>
-    <div class="container">
-    <div class="room-specs">
-    <h3>${room.roomType}</h3>
-    <div class="navFlex">
-    <p><b>Room Number:</b></p>
-    <p>${room.number}</p>
-    </div>
-    <div class="navFlex">
-    <p><b>Bedsize:</b></p>
-    <p> ${room.bedSize}</p>
-    </div>
-    <div class="navFlex">
-    <p><b>Bed #:</b></p>
-    <p> ${room.numBeds}</p>
-    </div>
-    <div class="navFlex">
-    <p><b>Cost:</b></p>
-    <p>${" $" + room.costPerNight}</p>
-    </div>
-    <input type="button" class="book-button" value="Book">
-    </div>
-    </div>
-    </div>
+      <div class="room-card" id=${room.number}>
+        <div class="container">
+          <div class="room-specs">
+            <h3>${room.roomType}</h3>
+            <div class="navFlex">
+            <p><b>Room Number:</b></p>
+            <p>${room.number}</p>
+            </div>
+            <div class="navFlex">
+            <p><b>Bedsize:</b></p>
+            <p> ${room.bedSize}</p>
+            </div>
+            <div class="navFlex">
+            <p><b>Bed #:</b></p>
+            <p> ${room.numBeds}</p>
+            </div>
+            <div class="navFlex">
+            <p><b>Cost:</b></p>
+            <p>${" $" + room.costPerNight}</p>
+            </div>
+            <input type="button" class="book-button" value="Book">
+          </div>
+        </div>
+      </div>
     </div>
     `
     roomsDisplay.insertAdjacentHTML('afterbegin', roomCard);
