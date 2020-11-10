@@ -78,7 +78,7 @@ window.addEventListener('click', buttonViewHandler)
 searchBar.addEventListener('input', searchAvailableRooms)
 // bookButton.addEventListener('click', bookARoom)
 
-//Navigation Functionality
+// VIEW HANDLERS & Navigation Functionality
 function buttonViewHandler(event) {
   if (event.target === sideBarButton) {
     openSideBar();
@@ -117,6 +117,18 @@ function searchRoomsByDate () {
   displayAvailableRooms(availableRooms);
 }
 
+function managerViewHandler() {
+  document.getElementById('login-section').style.display = 'none';
+  showElement('dashboard');
+  hideElement('rooms-available-section');
+}
+function customerViewHandler() {
+  document.getElementById('login-section').style.display = 'none';
+  showElement('dashboard');
+  showElement('customer-dashboard');
+  hideElement('manager-dashboard');
+}
+
 // USER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
 function filterBookingsByDate(date) {
 return hotel.allBookings.filter(booking => booking.date === date)
@@ -149,9 +161,10 @@ function searchAvailableRooms(event) {
   searchResults = availableRooms.reduce((searchMatches, room) => {
     if (searchInput === room.roomType) {
       console.log(room)
-      searchMatches.push(room)
+       searchMatches.push(room)
+       return searchMatches
     } else if (!searchInput) {
-      displayAvailableRooms(availableRooms)
+      return displayAvailableRooms(availableRooms)
     }
     console.log(searchMatches)
     return searchMatches
@@ -285,6 +298,7 @@ function displayCustomerBookings(bookingSet) {
 
 // CUSTOMER and MANAGER DASHBOARD - RETRIEVE DATA FUNCTIONS ------------
 
+// MANAGER
 function getTodayDate() {
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
@@ -316,51 +330,55 @@ function getRoomsFromBookings(bookings) {
 function getHotelStatsByDate(date) {
   currentBookings = filterBookingsByDate(chosenDate)
   getRoomsFromBookings(currentBookings)
-  const totalRevenue = getTotalRevenue()
+  let totalRevenue = getTotalRevenue()
 
-  const roomsAvailableToday = findAvailableRooms()
+  let roomsAvailableToday = findAvailableRooms()
   // console.log('rooms available today:', roomsAvailableToday)
 
   const initNumberOfRooms = hotel.allRooms.length
-  const numberOfBookedRooms = roomsAvailableToday.length
+  let numberOfBookedRooms = roomsAvailableToday.length
   // console.log('number of booked rooms', numberOfBookedRooms)
-  const percentBooked = Math.floor(((initNumberOfRooms - numberOfBookedRooms)/ initNumberOfRooms * 100))
+  let percentBooked = Math.floor(((initNumberOfRooms - numberOfBookedRooms)/ initNumberOfRooms * 100))
 
   displayHotelStats(numberOfBookedRooms, percentBooked, totalRevenue)
 }
+// CUSTOMER
+function findCustomer(idNum) {
+  return hotel.allCustomers.find(customer => customer.id === idNum)
+}
+function displayCustomerName() {
+  `
+  <h2 class="welcome-customer-msg">Welcome Back, ${customer.name}!</h2>
+  `
+}
 
 function compileUserBookings(idNum) {
-  const customer = hotel.allCustomers.find(customer => customer.id === idNum)
-  console.log(customer)
-  const foundBookings = hotel.allBookings.filter(booking => customer.id === booking.userId)
-  customer.bookings = sortBookingsByDate(foundBookings)
-  console.log(customer.bookings)
+  const customer = findCustomer(idNum)
+  // console.log(customer)
+  let foundBookings = hotel.allBookings.filter(booking => customer.id === booking.userId)
+  customer.bookings = foundBookings
+  // console.log(customer.bookings)
   return customer.bookings
-
 }
 
 function sortBookingsByDate(bookingSet) {
-  const bookingsByDate = bookingSet.sort((bookingA, bookingB) => {
+  let bookingsByDate = bookingSet.sort((bookingA, bookingB) => {
      return new Date(bookingA.date) - new Date(bookingB.date)
   })
-  // console.log(bookingsByDate)
   return bookingsByDate
 }
 
 function getTotalSpentOnBookings(customerBookings) {
   let customerBookedRooms = getRoomsFromBookings(customerBookings)
-  console.log(customerBookedRooms)
+  // console.log(customerBookedRooms)
   let totalSpentOnBookings = customerBookedRooms.reduce((totalSpent, room) => {
     totalSpent += room.costPerNight
     return totalSpent
   }, 0)
-  // totalSpentOnBookings = totalSpentOnBookings.toFixed(2)
   return totalSpentOnBookings.toFixed(2)
 }
-//customer spent on bookings = 6686.73
-//manager total daily revenue = 7535.09 --> works!
 
-// LOGIN SELECTORS, EventListeners, and FUNCTIONS
+// LOGIN ACCESS: SELECTORS, EventListeners, and FUNCTIONS
 
 const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-form-submit');
@@ -368,49 +386,36 @@ const loginErrorMsg = document.getElementById('login-error-msg');
 
 loginButton.addEventListener('click', grantAccess);
 
-function validateUser(idToken) {
-  if (idToken.length === 1 || idToken.length === 2) {
-    console.log(true)
-    return true
-  } else {
-    console.log(false)
-    return false
-  }
-  return
-}
-
 function grantAccess(event) {
   event.preventDefault();
   let username = loginForm.username.value;
-  let userDesignation = username;
-  let idToken = username.slice([8]);
   let password = loginForm.password.value;
-  console.log(idToken)
 
+  let userType = username.split('').splice(0, 8).join('').toLowerCase();
+  let idToken = parseInt(username.slice([8]));
+  let validUser = findCustomer(idToken)
+  console.log(userType, idToken, validUser)
 
-  if (username === 'manager' && password === 'overlook2020') {
+  if (password !== 'overlook2020') {
+    showLoginErrorMsg();
+    return;
+  }
+  if (userType === 'manager') {
     alert('You have successfully logged in as a manager.');
-    document.getElementById('login-section').style.display = 'none';
-    showElement('dashboard');
-    hideElement('rooms-available-section');
-    // hideElement('customer-dashboard');
-
+    managerViewHandler()
     todayDate = getTodayDate();
     chosenDate = "2020/02/07";
     getHotelStatsByDate(chosenDate)
 
-  } else if (username === 'customer' && password === 'overlook2020') {
+  } if (userType === 'customer' && validUser) {
     alert('You have successfully logged in as a customer.');
+    customerViewHandler();
 
-    document.getElementById('login-section').style.display = 'none';
-    showElement('dashboard');
-    showElement('customer-dashboard');
-    hideElement('manager-dashboard');
-    const customerBookings = compileUserBookings(7)
-    // displayCustomerBookings(processedBookings)
-    getTotalSpentOnBookings(customerBookings)
-    displayCustomerBookings(customerBookings)
-    displayTotalSpentOnBookings(customerBookings)
+    const customerBookings = compileUserBookings(validUser.id)
+    getTotalSpentOnBookings(customerBookings);
+    sortBookingsByDate(customerBookings)
+    displayCustomerBookings(customerBookings);
+    displayTotalSpentOnBookings(customerBookings);
 
   } else {
     showLoginErrorMsg()
@@ -422,6 +427,9 @@ function showLoginErrorMsg() {
 }
 
 function logOut() {
-  hideElement('dashboard');
-  document.getElementById('login-section').style.display = 'flex';
+  location.reload()
+
+  // document.getElementById('login-section').style.display = 'flex';
+  // loginForm.username.value = ''
+  // loginForm.password.value = ''
 }
