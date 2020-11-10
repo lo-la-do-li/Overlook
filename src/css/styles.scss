@@ -41,7 +41,7 @@ button, input, select, textarea, optgroup {
   margin-top: 20px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
-  height: 200px;
+  // height: 200px;
 }
 .room-card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -77,8 +77,14 @@ button, input, select, textarea, optgroup {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.container, .manager-container {
+.container, .manager-container, .user-container {
   padding: 2px 16px;
+}
+.welcome-msg {
+  text-align: center;
+}
+.describe-dashboard {
+  text-align: center;
 }
 
 .navFlex {
@@ -93,7 +99,7 @@ button, input, select, textarea, optgroup {
   margin-top: 13px;
 }
 
-.total-rooms, .percent-booked, .total-revenue {
+.total-rooms, .percent-booked, .total-revenue, .total-spent {
   font-size: 50px;
   text-align: center;
 }
@@ -184,6 +190,7 @@ button, input, select, textarea, optgroup {
   // -ms-user-select: none;
   // user-select: none
 }
+
 .user-container {
   width: 100%;
   margin-bottom: 30px;
@@ -194,12 +201,22 @@ button, input, select, textarea, optgroup {
 
 .w3-ul, .w3-border, .user-bookings {
     list-style-type: none;
+    width: 100%;
+    margin-bottom: 30px;
     padding: 0px;
+    margin: 0;
+}
+.w3-ul {
+    list-style-type: none;
+    padding: 0;
     margin: 0;
 }
 
 .w3-ul li:last-child {
     border-bottom: none;
+}
+.w3-padding-large {
+    padding: 12px 24px;
 }
 
 .w3-large {

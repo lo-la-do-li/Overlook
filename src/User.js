@@ -1,8 +1,8 @@
 class User {
-  constructor(user) {
-    this.id = user.id,
-    this.name = user.name,
-    this.bookings = user.bookings || []
+  constructor(customer) {
+    this.id = customer.id,
+    this.name = customer.name,
+    this.bookings = customer.bookings || []
   }
   getFirstName() {
    let firstName = this.name.split(' ');
