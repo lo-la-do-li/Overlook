@@ -346,14 +346,12 @@ function getHotelStatsByDate(date) {
 function findCustomer(idNum) {
   return hotel.allCustomers.find(customer => customer.id === idNum)
 }
-function displayCustomerName() {
-  `
-  <h2 class="welcome-customer-msg">Welcome Back, ${customer.name}!</h2>
-  `
+function displayCustomerName(customer) {
+  return document.querySelector('.welcome-msg').innerText = `Welcome Back, ${customer.getFirstName()}!`
 }
 
 function compileUserBookings(idNum) {
-  const customer = findCustomer(idNum)
+  let customer = findCustomer(idNum)
   // console.log(customer)
   let foundBookings = hotel.allBookings.filter(booking => customer.id === booking.userId)
   customer.bookings = foundBookings
@@ -416,6 +414,7 @@ function grantAccess(event) {
     sortBookingsByDate(customerBookings)
     displayCustomerBookings(customerBookings);
     displayTotalSpentOnBookings(customerBookings);
+    displayCustomerName(validUser)
 
   } else {
     showLoginErrorMsg()
