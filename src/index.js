@@ -93,10 +93,7 @@ function buttonViewHandler(event) {
     logOut();
   }
 }
-function logOut() {
-  hideElement('dashboard');
-  document.getElementById('login-section').style.display = 'flex';
-}
+
 function viewCustomerDash() {
   showElement('containFlex');
   hideElement('rooms-available');
@@ -120,65 +117,47 @@ function searchRoomsByDate () {
   displayAvailableRooms(availableRooms);
 }
 
-//BOOKINGS AND ROOMS
+// USER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
 function filterBookingsByDate(date) {
 return hotel.allBookings.filter(booking => booking.date === date)
 }
 
-function getTotalRevenue() {
-  let totalDailyRevenue = bookedRooms.reduce((totalRevenue, room) => {
-    totalRevenue += room.costPerNight
-    console.log(room.number,':', room.costPerNight)
-    return totalRevenue
-  }, 0)
-  console.log('total Daily Revenue', totalDailyRevenue)
-  return totalDailyRevenue.toFixed(2);
-}
-
-function getRoomsFromBookings(bookings) {
-  bookedRooms = bookings.reduce((acc, bookedRoom) => {
-    bookedRoom = hotel.allRooms.find(room => bookedRoom.roomNumber === room.number)
-     acc.push(bookedRoom)
-     return acc
-  },[])
-  return bookedRooms
-}
-
-function getHotelStatsByDate(date) {
-  currentBookings = filterBookingsByDate(chosenDate)
-  getRoomsFromBookings(currentBookings)
-  let totalRevenue = getTotalRevenue()
-
-  let roomsAvailableToday = findAvailableRooms()
-  // console.log('rooms available today:', roomsAvailableToday)
-
-  let initNumberOfRooms = hotel.allRooms.length
-  let numberOfBookedRooms = roomsAvailableToday.length
-  // console.log('number of booked rooms', numberOfBookedRooms)
-  let percentBooked = Math.floor(((initNumberOfRooms - numberOfBookedRooms)/ initNumberOfRooms * 100))
-
-  displayHotelStats(numberOfBookedRooms, percentBooked, totalRevenue)
-}
-
 function findAvailableRooms() {
-  console.log('hotel.allRooms', hotel.allRooms)
+  // console.log('hotel.allRooms', hotel.allRooms)
 
   currentBookings = filterBookingsByDate(chosenDate)
-  console.log('current bookings:', currentBookings)
+  // console.log('current bookings:', currentBookings)
 
   getRoomsFromBookings(currentBookings)
-  console.log('booked rooms:', bookedRooms)
+  // console.log('booked rooms:', bookedRooms)
 
   bookingRoomNumbers = currentBookings.map(booking => booking.roomNumber)
-  console.log('bookingRoomNumbers', bookingRoomNumbers)
+  // console.log('bookingRoomNumbers', bookingRoomNumbers)
 
   availableRooms = hotel.allRooms.reduce((acc, availableRoom) => {
       if(!bookingRoomNumbers.includes(availableRoom.number))
        acc.push(availableRoom)
        return acc
     },[])
-  console.log('available rooms:', availableRooms)
+  // console.log('available rooms:', availableRooms)
     return availableRooms
+}
+
+function searchAvailableRooms(event) {
+  let searchInput = event.target.value;
+
+  searchResults = availableRooms.reduce((searchMatches, room) => {
+    if (searchInput === room.roomType) {
+      console.log(room)
+      searchMatches.push(room)
+    } else if (!searchInput) {
+      displayAvailableRooms(availableRooms)
+    }
+    console.log(searchMatches)
+    return searchMatches
+  }, [])
+
+  displayAvailableRooms(searchResults)
 }
 
 function bookARoom(event) {
@@ -217,22 +196,8 @@ function updateAvailBookings() {
   // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
 }
 
-function searchAvailableRooms(event) {
-  let searchInput = event.target.value;
+//MOVE TO domUpdates.js ------------------------------------------------
 
-  searchResults = availableRooms.reduce((searchMatches, room) => {
-    if (searchInput === room.roomType) {
-      console.log(room)
-      searchMatches.push(room)
-    }
-    console.log(searchMatches)
-    return searchMatches
-  }, [])
-
-  displayAvailableRooms(searchResults)
-}
-
-//MOVE TO domUpdates.js
 function hideElement(className) {
   document.querySelector(`.${className}`).classList.add('hidden')
 }
@@ -246,6 +211,11 @@ function displayHotelStats(numberOfRooms, percentBooked, totalRevenue) {
   document.querySelector('.percent-booked').innerHTML = `${percentBooked}%`
   document.querySelector('.total-revenue').innerHTML = '$' + totalRevenue
 
+}
+
+function displayTotalSpentOnBookings(customerBookings) {
+  document.querySelector('.total-spent').innerHTML =
+  '$' + `${getTotalSpentOnBookings(customerBookings)}`
 }
 
 function displayAvailableRooms(roomSet) {
@@ -312,6 +282,9 @@ function displayCustomerBookings(bookingSet) {
   })
 }
 
+
+// CUSTOMER and MANAGER DASHBOARD - RETRIEVE DATA FUNCTIONS ------------
+
 function getTodayDate() {
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
@@ -321,34 +294,98 @@ function getTodayDate() {
   return today
 }
 
+function getTotalRevenue() {
+  let totalDailyRevenue = bookedRooms.reduce((totalRevenue, room) => {
+    totalRevenue += room.costPerNight
+    console.log(room.number,':', room.costPerNight)
+    return totalRevenue
+  }, 0)
+  console.log('total Daily Revenue', totalDailyRevenue)
+  return totalDailyRevenue.toFixed(2);
+}
+
+function getRoomsFromBookings(bookings) {
+  bookedRooms = bookings.reduce((acc, bookedRoom) => {
+    bookedRoom = hotel.allRooms.find(room => bookedRoom.roomNumber === room.number)
+     acc.push(bookedRoom)
+     return acc
+  },[])
+  return bookedRooms
+}
+
+function getHotelStatsByDate(date) {
+  currentBookings = filterBookingsByDate(chosenDate)
+  getRoomsFromBookings(currentBookings)
+  const totalRevenue = getTotalRevenue()
+
+  const roomsAvailableToday = findAvailableRooms()
+  // console.log('rooms available today:', roomsAvailableToday)
+
+  const initNumberOfRooms = hotel.allRooms.length
+  const numberOfBookedRooms = roomsAvailableToday.length
+  // console.log('number of booked rooms', numberOfBookedRooms)
+  const percentBooked = Math.floor(((initNumberOfRooms - numberOfBookedRooms)/ initNumberOfRooms * 100))
+
+  displayHotelStats(numberOfBookedRooms, percentBooked, totalRevenue)
+}
+
+function compileUserBookings(idNum) {
+  const customer = hotel.allCustomers.find(customer => customer.id === idNum)
+  console.log(customer)
+  const foundBookings = hotel.allBookings.filter(booking => customer.id === booking.userId)
+  customer.bookings = sortBookingsByDate(foundBookings)
+  console.log(customer.bookings)
+  return customer.bookings
+
+}
+
+function sortBookingsByDate(bookingSet) {
+  const bookingsByDate = bookingSet.sort((bookingA, bookingB) => {
+     return new Date(bookingA.date) - new Date(bookingB.date)
+  })
+  // console.log(bookingsByDate)
+  return bookingsByDate
+}
+
+function getTotalSpentOnBookings(customerBookings) {
+  let customerBookedRooms = getRoomsFromBookings(customerBookings)
+  console.log(customerBookedRooms)
+  let totalSpentOnBookings = customerBookedRooms.reduce((totalSpent, room) => {
+    totalSpent += room.costPerNight
+    return totalSpent
+  }, 0)
+  // totalSpentOnBookings = totalSpentOnBookings.toFixed(2)
+  return totalSpentOnBookings.toFixed(2)
+}
+//customer spent on bookings = 6686.73
+//manager total daily revenue = 7535.09 --> works!
 
 // LOGIN SELECTORS, EventListeners, and FUNCTIONS
+
 const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-form-submit');
 const loginErrorMsg = document.getElementById('login-error-msg');
 
 loginButton.addEventListener('click', grantAccess);
 
-function compileUserBookings(idNum) {
-  const customer = hotel.allCustomers.find(customer => customer.id === idNum)
-  console.log(customer)
-  const customerBookings = hotel.allBookings.filter(booking => customer.id === booking.userId)
-  customer.bookings = sortBookingsByDate(customerBookings)
-  console.log(customer.bookings)
-  return customer.bookings
+function validateUser(idToken) {
+  if (idToken.length === 1 || idToken.length === 2) {
+    console.log(true)
+    return true
+  } else {
+    console.log(false)
+    return false
+  }
+  return
+}
 
-}
-function sortBookingsByDate(bookingSet) {
-  const bookingsByDate = bookingSet.sort((bookingA, bookingB) => {
-     return new Date(bookingA.date) - new Date(bookingB.date)
-  })
-  console.log(bookingsByDate)
-  return bookingsByDate
-}
 function grantAccess(event) {
   event.preventDefault();
-  const username = loginForm.username.value;
-  const password = loginForm.password.value;
+  let username = loginForm.username.value;
+  let userDesignation = username;
+  let idToken = username.slice([8]);
+  let password = loginForm.password.value;
+  console.log(idToken)
 
 
   if (username === 'manager' && password === 'overlook2020') {
@@ -359,7 +396,7 @@ function grantAccess(event) {
     // hideElement('customer-dashboard');
 
     todayDate = getTodayDate();
-    chosenDate = "2020/02/01";
+    chosenDate = "2020/02/07";
     getHotelStatsByDate(chosenDate)
 
   } else if (username === 'customer' && password === 'overlook2020') {
@@ -369,9 +406,11 @@ function grantAccess(event) {
     showElement('dashboard');
     showElement('customer-dashboard');
     hideElement('manager-dashboard');
-    let customerBookings = compileUserBookings(7)
+    const customerBookings = compileUserBookings(7)
     // displayCustomerBookings(processedBookings)
+    getTotalSpentOnBookings(customerBookings)
     displayCustomerBookings(customerBookings)
+    displayTotalSpentOnBookings(customerBookings)
 
   } else {
     showLoginErrorMsg()
@@ -380,4 +419,9 @@ function grantAccess(event) {
 
 function showLoginErrorMsg() {
   loginErrorMsg.style.opacity = 1;
+}
+
+function logOut() {
+  hideElement('dashboard');
+  document.getElementById('login-section').style.display = 'flex';
 }
