@@ -67,7 +67,9 @@
     </div>
 
     <section class="customer-dashboard hidden">
+      <h2 class="welcome-msg"></h2>
       <div class="containFlex">
+        <h2 class="welcome-customer-msg"></h2>
         <div>
           <div class="card">
             <div class="user-container">
@@ -90,8 +92,10 @@
     </section>
 
     <section class="manager-dashboard">
+      <h2 class="welcome-msg">Welcome Back!</h2>
+      <h3 class="describe-dashboard"> Here are today's occupancy and revenue stats:</h3>
       <div class="containFlex">
-
+        <!-- <h2 class="welcome-manager-msg">Welcome Back!</h2> -->
         <div class="card">
           <div class="manager-container">
             <h4><b>Rooms Available</b></h4>
@@ -125,7 +129,7 @@
   </form> -->
   <div class="rooms-available-section">
     <form>
-      <input type="text" name="search" class="search-bar hidden" placeholder="Search..">
+      <input type="text" name="search" class="search-bar hidden" onfocus=”this.value=”;” placeholder="Search..">
     </form>
     <div>
 
