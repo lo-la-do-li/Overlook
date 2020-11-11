@@ -6,7 +6,7 @@
   <title>OverLook</title>
   <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet"> -->
 
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 
   <link rel="stylesheet" type="text/scss" href="styles.scss"/>
 </head>
@@ -15,7 +15,7 @@
   <h1 id='header-name'>Welcome To Overlook</h1>
 </header> -->
 <main>
-  <div id="login-section" >
+  <div id="login-section">
     <div id="login-holder">
       <h2 id="login-header">Please Login</h2>
       <div id="login-error-msg-holder">
@@ -53,15 +53,15 @@
           <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn" onclick="w3_open()">&#9776;</button>
           <!-- <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn" onclick="w3_open()" style="display: none;">☰</button> -->
 
-          <button class="customer-dash-tab w3-button w3-teal w3-xlarge">Dashboard</button>
-          <button class="search-results-tab w3-button w3-teal w3-xlarge">Search Results</button>
-          <button class="search-users-tab w3-button w3-teal w3-xlarge">Search Users</button>
+          <button class="customer-dash-tab w3-button w3-teal ">Dashboard</button>
+          <button class="search-results-tab w3-button w3-teal ">Search Results</button>
+          <button class="search-users-tab w3-button w3-teal ">Search Users</button>
 
 
           <div class="w3-container navFlex" style="margin-left: auto;">
             <div class="navFlex">
-              <h2>OverLook</h2>
-              <button class="log-out-btn w3-button w3-teal w3-xlarge">Logout</button>
+              <h4>OverLook</h4>
+              <button class="log-out-btn w3-button w3-teal ">Logout</button>
             </div>
           </div>
         </div>
@@ -148,6 +148,23 @@
       </div>
     </main>
     <script>
+// var coll = document.querySelector(".collapsible");
+// var i;
+//
+// for (i = 0; i < coll.length; i++) {
+//   coll[i].addEventListener("click", function() {
+//     console.log("something was clicked")
+//     this.classList.toggle("active");
+//     var content = this.nextElementSibling;
+//     if (content.style.display === "block") {
+//       content.style.display = "none";
+//     } else {
+//       content.style.display = "block";
+//     }
+//   });
+// }
+
+
     function w3_open() {
       document.getElementById("main").style.marginLeft = "25%";
       document.getElementById("mySidebar").style.width = "25%";

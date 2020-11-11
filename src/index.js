@@ -18,7 +18,7 @@ let availableRooms = []
 let currentBookings = []
 let bookingRoomNumbers = []
 let bookedRooms = []
-
+let thisCustomer;
 let userBooking;
 let roomToBook;
 let numberOfRooms;
@@ -34,7 +34,6 @@ let viewBookingsBtn;
 let allSessionBookings = [];
 
 
-
 //QuerySelectors
 let travelDateButton = document.querySelector('.button');
 let travelInput = document.getElementById('travel-date');
@@ -43,8 +42,10 @@ let roomsAvailableSection = document.querySelector('.rooms-available-section')
 let searchUsersSection = document.querySelector('.search-users-section')
 // let customerDashBoard = document.querySelector('.customer-dashboard')
 // let managerDashboard = document.querySelector('.manager-dashboard')
+let searchBar2 = document.querySelector('.search-bar2')
 let searchBar = document.querySelector('.search-bar')
 let sideBarButton = document.querySelector('.side-bar-btn')
+let usersDocket = document.querySelector('.user-list')
 
 //Initial APIS
 Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBookingData()])
@@ -77,7 +78,7 @@ window.addEventListener('load', onLoadHandler)
 travelDateButton.addEventListener('click', searchRoomsByDate)
 sideBarButton.addEventListener('click', openSideBar)
 window.addEventListener('click', buttonViewHandler)
-// searchBar.addEventListener('input', searchAvailableRooms)
+searchBar2.addEventListener('input', searchCustomersByName)
 searchBar.addEventListener('input', searchAvailableRooms)
 // bookButton.addEventListener('click', bookARoom)
 
@@ -98,8 +99,47 @@ function buttonViewHandler(event) {
   if (event.target.classList.contains('log-out-btn')) {
     logOut();
   }
+  // if (event.target.classList.contains('bookings-btn')) {
+  //     let bookingsToView = event.target.closest('.room-card').id
+  //     let thisUsersBookings = compileUserBookings(bookingsToView)
+  //     console.log(thisUsersBookings)
+  // }
 }
+function viewUserBookings(event) {
+  let bookingsToView = event.target.closest('.room-card').id
+  // const closestElement = ('.room-card').closest('div');
+    const content = event.target.closest('.collapsible')
+   var bookingsContainer =  content.nextElementSibling;
 
+    if (bookingsContainer.style.display === "block") {
+          bookingsContainer.style.display = "none";
+        } else {
+          bookingsContainer.style.display = "block";
+        }
+  // let collapse = event.target.closest('.room-card')
+  // let content = viewBookingsBtn.nextElementSibling;
+  console.log(content)
+  // if (content.style.display === "block") {
+  //     content.style.display = "none";
+  //   } else {
+  //     content.style.display = "block";
+  //   }
+// console.log(collapse)
+// event.target.closest(viewBookingsBtn)
+  let thisCustomer = findCustomer(+bookingsToView)
+  console.log(thisCustomer)
+  let thisCustomersBookings = compileUserBookings(thisCustomer.id)
+  console.log(thisCustomersBookings)
+  thisCustomersBookings.forEach(booking => {
+  let customerBooking =
+  `<ul>
+<li>${booking.id}</li>
+  </ul>
+  `
+  bookingsContainer.insertAdjacentHTML('afterbegin', customerBooking)
+})
+
+}
 // function buttonViewHandler(event) {
 //   if (event.target.classList.contains('search-rooms')) {
 //     openSideBar();
@@ -123,7 +163,8 @@ function viewSearchUsers() {
   hideElement('manager-dashboard');
   hideElement('rooms-available');
   showElement('search-users-section');
-  showElement('search-bar');
+  hideElement('search-bar');
+  showElement('search-bar2')
   hideElement('welcome-msg');
   // w3_open();
 }
@@ -235,22 +276,29 @@ function updateAvailBookings() {
 }
 // MANAGER FUNCTIONALITY: SEARCH USERS AND BOOK -----------------------------------
 
+
+function displaySearchUserError() {
+let errorCard =
+`<div class="room-specs">
+  <h3>Sorry! No users match that name</h3>
+  <input type="button" class="booking-btn" value="View Bookings">
+</div>
+`
+document.querySelector('user-list').insertAdjacentHTML('afterbegin', errorCard)
+}
+
+// document.querySelector('user-list').insertAdjacentHTML('afterbegin', errorCard)
 function searchCustomersByName(event) {
+  console.log(hotel.allCustomers)
   let searchNameInput = event.target.value.toLowerCase()
-    customerSearchResults = hotel.allCustomers.reduce((searchMatches, customer) => {
-    if (searchNameInput === customer.getFirstName().toLowerCase()) {
-      searchMatches.push(customer)
-       // console.log(searchMatches)
-       return searchMatches
-    } else if (!searchNameInput) {
-      console.log('no matches:', hotel.allCustomers)
-      return hotel.allCustomers
-    }
-    return searchMatches
-  }, [])
+  console.log(searchNameInput)
+   customerSearchResults = hotel.allCustomers.filter(customer => {
+  return (
+    customer.name.toLowerCase().includes(searchNameInput)
+  );
+});
   console.log(customerSearchResults)
-  // displayCustomers(customerSearchResults)
-  return customerSearchResults;
+  displayUsers(customerSearchResults);
 }
 
 
@@ -319,12 +367,12 @@ function displayAvailableRooms(roomSet) {
 function displayNewBooking(booking) {
   let userBookings = document.querySelector('.user-bookings')
 
-  let bookingCard =
+  let newBookingCard =
   `
   <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
   </li>
   `
-  userBookings.insertAdjacentHTML('afterbegin', bookingCard)
+  userBookings.insertAdjacentHTML('afterbegin', newBookingCard)
 }
 
 function displayCustomerBookings(bookingSet) {
@@ -344,20 +392,26 @@ function displayCustomerBookings(bookingSet) {
 
 function displayUsers(users) {
   console.log(users)
-  let usersDocket = document.querySelector('.user-list')
+  usersDocket.innerHTML = ''
   users.forEach(user => {
 
   let userCard =
   `
   <div class="w3-container">
-    <div class="room-card" id=${user.id}>
-      <div class="container">
+    <div class="room-card collapsible" id=${user.id}>
+      <div class="container ">
         <div class="room-specs">
           <h3>${user.name}</h3>
-          <input type="button" class="booking-btn" value="View Bookings">
+          <div>
+          <input type="button" class="bookings-btn" value="View Bookings">
+          <input type="button" class="book-room-button" value="Book Room">
+          </div>
         </div>
       </div>
     </div>
+    <div class="content">
+
+</div>
   </div>
   `
   // `
@@ -367,9 +421,13 @@ function displayUsers(users) {
   // `
   usersDocket.insertAdjacentHTML('afterbegin', userCard)
   viewBookingsBtn = document.querySelector('.bookings-btn');
-  // viewBookingsBtn.addEventListener('click', viewUserBookings);
+  // coll = document.querySelector('.collapsible');
+
+  viewBookingsBtn.addEventListener('click', viewUserBookings);
+
   })
 }
+
 
 // CUSTOMER and MANAGER DASHBOARD - RETRIEVE DATA FUNCTIONS ------------
 
@@ -417,6 +475,7 @@ function getHotelStatsByDate(date) {
 
   displayHotelStats(numberOfBookedRooms, percentBooked, totalRevenue)
 }
+
 // CUSTOMER
 function findCustomer(idNum) {
   return hotel.allCustomers.find(customer => customer.id === idNum)

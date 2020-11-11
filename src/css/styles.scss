@@ -190,6 +190,29 @@ button, input, select, textarea, optgroup {
   // -ms-user-select: none;
   // user-select: none
 }
+.collapsible {
+  // background-color: #777;
+  // color: white;
+  cursor: pointer;
+  // padding: 18px;
+  // width: 100%;
+  // border: none;
+  // text-align: left;
+  // outline: none;
+  // font-size: 15px;
+}
+
+// .active {
+//   background-color: #555;
+// }
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
 
 .user-container {
   width: 100%;
@@ -245,7 +268,7 @@ button, input, select, textarea, optgroup {
 }
 
 // Search bar
-.search-bar {
+.search-bar, .search-bar2 {
   width: 50%;
   box-sizing: border-box;
   border: 2px solid #ccc;
