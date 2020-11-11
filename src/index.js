@@ -320,7 +320,10 @@ function searchCustomersByName(event) {
   console.log(customerSearchResults)
   displayUsers(customerSearchResults);
 }
+function bookRoomForCustomer () {
+  console.log('Here we goo')
 
+}
 
 
 //MOVE TO domUpdates.js ------------------------------------------------
@@ -443,11 +446,6 @@ function displayUsers(users) {
 
 
   })
-}
-
-function bookRoomForCustomer () {
-  console.log('Here we goo')
-
 }
 
 // CUSTOMER and MANAGER DASHBOARD - RETRIEVE DATA FUNCTIONS ------------

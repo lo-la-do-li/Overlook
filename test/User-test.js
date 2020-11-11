@@ -1,53 +1,33 @@
+
 import { expect } from 'chai';
 
 import User from '../src/User';
+import Room from '../src/Room';
+import Booking from '../src/Booking';
 
 describe('User', () => {
-  let user, room1, room2, room3, room4, room5, rooms, booking1, booking2, booking3, booking4, booking5, bookings;
+  let user, room1, room2, room3, rooms, booking1, booking2, booking3, bookings;
 
   beforeEach(() => {
-    user = new User(9, 'Maxie Torp')
-    room1 = {
+    user = new User({id: 9, name: 'Maxie Torp', bookings: []})
+    room1 = new Room({
       "number": 1,
       "roomType": "suite",
       "bidet": true,
       "bedSize": "queen",
       "numBeds": 1,
       "costPerNight": 345.72
-    }
-    room2 = {
+    })
+    room2 = new Room({
       "number": 2,
       "roomType": "suite",
       "bidet": false,
       "bedSize": "king",
       "numBeds": 1,
       "costPerNight": 545.72
-    }
-    room3 = {
-      "number": 3,
-      "roomType": "suite",
-      "bidet": true,
-      "bedSize": "double",
-      "numBeds": 1,
-      "costPerNight": 145.72
-    }
-    room4 = {
-      "number": 4,
-      "roomType": "single room",
-      "bidet": false,
-      "bedSize": "queen",
-      "numBeds": 2,
-      "costPerNight": 231.46
-    }
-    room5 = {
-      "number": 5,
-      "roomType": "junior suite",
-      "bidet": false,
-      "bedSize": "king",
-      "numBeds": 1,
-      "costPerNight": 261.26
-    }
-    rooms = [room1, room2, room3, room4, room5]
+    })
+
+    rooms = [room1, room2]
 
     booking1 = {  
       "id": "5fwrgu4i7k55hl6sz", 
@@ -64,32 +44,7 @@ describe('User', () => {
       "roomNumber": 2,
       "roomServiceCharges": []
     }
-
-    booking3 = {
-      "id": "5fwrgu4i7k55hl6t6",
-      "userID": 13,
-      "date": "2020/02/03",
-      "roomNumber": 3,
-      "roomServiceCharges": []
-    }
-
-    booking4 = {
-      "id": "5fwrgu4i7k55hl6t6",
-      "userID": 13,
-      "date": "2020/02/04",
-      "roomNumber": 1,
-      "roomServiceCharges": []
-    }
-
-    booking5 = {
-      "id": "5fwrgu4i7k55hl6t6",
-      "userID": 13,
-      "date": "2020/02/05",
-      "roomNumber": 4,
-      "roomServiceCharges": []
-    }
-
-    bookings = [booking1, booking2, booking3, booking4, booking5];
+    bookings = [booking1, booking2]
   });
 
   it('should be a function', () => {
@@ -116,5 +71,5 @@ describe('User', () => {
   });
   it('should be able to search for available rooms by date', () => {
     expect(user.findARoom('2020/02/01', bookings, rooms).to.deep.equal([room1, room2]))
-  })
+  });
 });
