@@ -30,6 +30,7 @@ let customerSearchResults = [];
 
 let newBookingData;
 let bookButton;
+let viewBookingsBtn;
 let allSessionBookings = [];
 
 
@@ -39,6 +40,7 @@ let travelDateButton = document.querySelector('.button');
 let travelInput = document.getElementById('travel-date');
 let roomsDisplay = document.querySelector('.rooms-available');
 let roomsAvailableSection = document.querySelector('.rooms-available-section')
+let searchUsersSection = document.querySelector('.search-users-section')
 // let customerDashBoard = document.querySelector('.customer-dashboard')
 // let managerDashboard = document.querySelector('.manager-dashboard')
 let searchBar = document.querySelector('.search-bar')
@@ -76,7 +78,7 @@ travelDateButton.addEventListener('click', searchRoomsByDate)
 sideBarButton.addEventListener('click', openSideBar)
 window.addEventListener('click', buttonViewHandler)
 // searchBar.addEventListener('input', searchAvailableRooms)
-searchBar.addEventListener('input', searchCustomersByName)
+searchBar.addEventListener('input', searchAvailableRooms)
 // bookButton.addEventListener('click', bookARoom)
 
 // VIEW HANDLERS & Navigation Functionality
@@ -90,38 +92,52 @@ function buttonViewHandler(event) {
   if (event.target.classList.contains('search-results-tab')) {
     viewSearchRooms();
   }
+  if (event.target.classList.contains('search-users-tab')) {
+    viewSearchUsers();
+  }
   if (event.target.classList.contains('log-out-btn')) {
     logOut();
   }
 }
 
+// function buttonViewHandler(event) {
+//   if (event.target.classList.contains('search-rooms')) {
+//     openSideBar();
+//   }
+
 function viewCustomerDash() {
-  showElement('containFlex');
   hideElement('rooms-available');
   hideElement('search-bar');
+  showElement('containFlex');
+  showElement('welcome-msg');
   // w3_close();
 }
 function viewSearchRooms() {
   hideElement('containFlex');
+  hideElement('welcome-msg');
   showElement('rooms-available');
   showElement('search-bar');
   // w3_open();
 }
+function viewSearchUsers() {
+  hideElement('manager-dashboard');
+  hideElement('rooms-available');
+  showElement('search-users-section');
+  showElement('search-bar');
+  hideElement('welcome-msg');
+  // w3_open();
+}
 function openSideBar() {
-  searchBar.classList.remove('hidden')
-  hideElement('containFlex')
+  searchBar.classList.remove('hidden');
+  hideElement('containFlex');
+  hideElement('welcome-msg');
 }
 
-function searchRoomsByDate () {
-  chosenDate = travelInput.value.replace(/-/g, "/")
-  findAvailableRooms();
-  displayAvailableRooms(availableRooms);
-}
-
-function managerViewHandler() {
+function managerLoginViewHandler() {
   document.getElementById('login-section').style.display = 'none';
   showElement('dashboard');
-  // hideElement('rooms-available-section');
+  hideElement('search-users-section');
+  hideElement('search-rooms')
 }
 function customerViewHandler() {
   document.getElementById('login-section').style.display = 'none';
@@ -133,6 +149,12 @@ function customerViewHandler() {
 // USER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
 function filterBookingsByDate(date) {
 return hotel.allBookings.filter(booking => booking.date === date)
+}
+
+function searchRoomsByDate () {
+  chosenDate = travelInput.value.replace(/-/g, "/")
+  findAvailableRooms();
+  displayAvailableRooms(availableRooms);
 }
 
 function findAvailableRooms() {
@@ -155,7 +177,9 @@ function findAvailableRooms() {
   // console.log('available rooms:', availableRooms)
     return availableRooms
 }
+function displaySearchErrorMessage() {
 
+}
 function searchAvailableRooms(event) {
   let searchInput = event.target.value;
 
@@ -165,7 +189,7 @@ function searchAvailableRooms(event) {
        searchMatches.push(room)
        return searchMatches
     } else if (!searchInput) {
-      return displayAvailableRooms(availableRooms)
+      displayAvailableRooms(availableRooms)
     }
     console.log(searchMatches)
     return searchMatches
@@ -211,7 +235,7 @@ function updateAvailBookings() {
 }
 // MANAGER FUNCTIONALITY: SEARCH USERS AND BOOK -----------------------------------
 
-function searchCustomersByName (event) {
+function searchCustomersByName(event) {
   let searchNameInput = event.target.value.toLowerCase()
     customerSearchResults = hotel.allCustomers.reduce((searchMatches, customer) => {
     if (searchNameInput === customer.getFirstName().toLowerCase()) {
@@ -309,6 +333,7 @@ function displayCustomerBookings(bookingSet) {
   bookingSet.forEach(booking => {
 
   let bookingCard =
+
   `
   <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
   </li>
@@ -317,6 +342,34 @@ function displayCustomerBookings(bookingSet) {
   })
 }
 
+function displayUsers(users) {
+  console.log(users)
+  let usersDocket = document.querySelector('.user-list')
+  users.forEach(user => {
+
+  let userCard =
+  `
+  <div class="w3-container">
+    <div class="room-card" id=${user.id}>
+      <div class="container">
+        <div class="room-specs">
+          <h3>${user.name}</h3>
+          <input type="button" class="booking-btn" value="View Bookings">
+        </div>
+      </div>
+    </div>
+  </div>
+  `
+  // `
+  // <li class="w3-padding-large"><span>Name: ${user.name}</span>
+  // <input type="button" class="bookings-btn" value="View Bookings">
+  // </li>
+  // `
+  usersDocket.insertAdjacentHTML('afterbegin', userCard)
+  viewBookingsBtn = document.querySelector('.bookings-btn');
+  // viewBookingsBtn.addEventListener('click', viewUserBookings);
+  })
+}
 
 // CUSTOMER and MANAGER DASHBOARD - RETRIEVE DATA FUNCTIONS ------------
 
@@ -422,10 +475,11 @@ function grantAccess(event) {
   }
   if (userType === 'manager') {
     alert('You have successfully logged in as a manager.');
-    managerViewHandler()
+    managerLoginViewHandler()
     todayDate = getTodayDate();
     chosenDate = "2020/02/07";
     getHotelStatsByDate(chosenDate)
+    displayUsers(hotel.allCustomers)
 
   } if (userType === 'customer' && validUser) {
     alert('You have successfully logged in as a customer.');

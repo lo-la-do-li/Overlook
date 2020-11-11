@@ -61,7 +61,7 @@ button, input, select, textarea, optgroup {
   margin-top: 50px;
   border-radius: 4px;
 }
-.book-button {
+.book-button, .bookings-btn {
   background-color: #009688;
   border: none;
   color: white;
@@ -111,7 +111,7 @@ button, input, select, textarea, optgroup {
   flex-direction: row;
   justify-content: space-evenly;
 }
-.rooms-available {
+.rooms-available, .user-list {
   margin-top: 30px;
   margin-left: 20px;
   display: flex;
