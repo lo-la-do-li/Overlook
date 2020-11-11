@@ -247,20 +247,16 @@ function displaySearchErrorMessage() {
 }
 function searchAvailableRooms(event) {
   let searchInput = event.target.value;
-// hideElement('customer-dashboard')
-  searchResults = availableRooms.reduce((searchMatches, room) => {
-    if (searchInput === room.roomType) {
-      console.log(room)
-       searchMatches.push(room)
-       return searchMatches
-    } else if (!searchInput) {
-      displayAvailableRooms(availableRooms)
-    }
-    console.log(searchMatches)
-    return searchMatches
-  }, [])
+hideElement('customer-dashboard')
+hideElement('manager-dashboard')
 
-  displayAvailableRooms(searchResults)
+  let roomSearchResults = availableRooms.filter(room => {
+ return (
+   room.roomType.toLowerCase().includes(searchInput)
+ );
+});
+
+  displayAvailableRooms(roomSearchResults)
 }
 
 function bookARoom(event) {
