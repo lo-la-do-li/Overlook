@@ -201,11 +201,10 @@ function managerLoginViewHandler() {
 }
 function customerLoginViewHandler() {
   document.getElementById('login-section').style.display = 'none';
-hideElement('search-users-tab')
+  hideElement('search-users-tab');
   hideElement('manager-dashboard');
   showElement('dashboard');
   document.querySelector('.search-users-tab').style.display = 'none';
-  // hideElement('manager-dash-tab');
   hideElement('search-users-tab');
   showElement('customer-dashboard');
 }
@@ -320,6 +319,7 @@ function searchCustomersByName(event) {
   console.log(customerSearchResults)
   displayUsers(customerSearchResults);
 }
+
 function bookRoomForCustomer () {
   console.log('Here we goo')
 
@@ -554,9 +554,11 @@ function grantAccess(event) {
   if (userType === 'manager') {
 
     alert('You have successfully logged in as a manager.');
-    managerLoginViewHandler()
+
     todayDate = getTodayDate();
     chosenDate = "2020/02/07";
+    userType = 'manager'
+    managerLoginViewHandler();
     getHotelStatsByDate(chosenDate)
     displayUsers(hotel.allCustomers)
 
@@ -565,6 +567,7 @@ function grantAccess(event) {
     customerLoginViewHandler();
 
     const customerBookings = compileUserBookings(validUser.id)
+    userType = 'customer'
     getTotalSpentOnBookings(customerBookings);
     sortBookingsByDate(customerBookings)
     displayCustomerBookings(customerBookings);

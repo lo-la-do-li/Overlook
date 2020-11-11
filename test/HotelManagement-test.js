@@ -71,7 +71,7 @@ describe('HotelManagement', () => {
     expect(HotelManagement).to.be.a('function');
   });
 
-  it('should be an instance of user', () => {
+  it('should instantiate a hotel', () => {
     expect(hotel).to.be.an.instanceof(HotelManagement);
   });
 });

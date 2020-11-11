@@ -19,8 +19,7 @@ class User {
       }
     console.log(unavailableRooms)
     return unavailableRooms
-}, [])
-
+  }, [])
 }
 
   bookARoom(booking) {
