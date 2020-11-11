@@ -6,7 +6,7 @@
   <title>OverLook</title>
   <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet"> -->
 
-  <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
   <link rel="stylesheet" type="text/scss" href="styles.scss"/>
 </head>
@@ -34,7 +34,7 @@
       <button class="w3-bar-item w3-button w3-large"
       onclick="w3_close()">Close &times;</button>
       <div class="w3-container">
-        <div class="card">
+        <div class="find-room-card">
           <div class="container">
             <h2>Find a Room</h2>
             <form>
@@ -54,8 +54,9 @@
           <!-- <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn" onclick="w3_open()" style="display: none;">☰</button> -->
 
           <button class="customer-dash-tab w3-button w3-teal ">Dashboard</button>
+
           <button class="search-results-tab w3-button w3-teal ">Search Results</button>
-          <button class="search-users-tab w3-button w3-teal ">Search Users</button>
+          <button class="search-users-tab w3-button w3-teal hidden">Search Users</button>
 
 
           <div class="w3-container navFlex" style="margin-left: auto;">
@@ -67,7 +68,7 @@
         </div>
       </div>
 
-      <section class="customer-dashboard hidden">
+      <section class="customer-dashboard">
         <h2 class="welcome-msg"></h2>
         <div class="containFlex">
           <h2 class="welcome-customer-msg"></h2>
@@ -126,7 +127,7 @@
 
       <section class="rooms-available-section">
         <form>
-          <input type="text" name="search" class="search-bar search-rooms hidden" onfocus=”this.value=”;” placeholder="Search By Room Type..">
+          <input type="text" name="search" class="search-bar search-rooms" onfocus=”this.value=”;” placeholder="Search By Room Type..">
         </form>
         <div>
 
@@ -135,9 +136,9 @@
         </div>
       </section>
 
-      <section class="search-users-section">
+      <section class="search-users-section hidden">
         <form>
-          <input type="text" name="search" class="search-bar2 search-users hidden" placeholder="Search Users By Name..">
+          <input type="text" name="search" class="search-bar2 search-users" placeholder="Search Users By Name..">
         </form>
 
         <div class="user-container">

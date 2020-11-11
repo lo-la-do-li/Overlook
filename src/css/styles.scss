@@ -127,6 +127,13 @@ button, input, select, textarea, optgroup {
   display: none
 }
 
+.find-room-card {
+  margin-top: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  height: 225px;
+}
+
 // SIDEBAR
 .w3-sidebar {
   height:100%;
@@ -191,20 +198,8 @@ button, input, select, textarea, optgroup {
   // user-select: none
 }
 .collapsible {
-  // background-color: #777;
-  // color: white;
   cursor: pointer;
-  // padding: 18px;
-  // width: 100%;
-  // border: none;
-  // text-align: left;
-  // outline: none;
-  // font-size: 15px;
 }
-
-// .active {
-//   background-color: #555;
-// }
 
 .content {
   padding: 0 18px;
@@ -212,7 +207,6 @@ button, input, select, textarea, optgroup {
   overflow: hidden;
   background-color: #f1f1f1;
 }
-
 
 .user-container {
   width: 100%;
