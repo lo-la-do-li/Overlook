@@ -44,7 +44,8 @@ let roomsAvailableSection = document.querySelector('.rooms-available-section')
 let searchUsersSection = document.querySelector('.search-users-section')
 let searchBar2 = document.querySelector('.search-bar2')
 let searchBar = document.querySelector('.search-bar')
-let sideBarButton = document.querySelector('.side-bar-btn')
+let sideBarOpenBtn = document.querySelector('.side-bar-btn')
+let sideBarCloseBtn = document.querySelector('.side-bar-close')
 let usersDocket = document.querySelector('.user-list')
 
 //Initial APIS
@@ -76,7 +77,7 @@ function instantiateData(data) {
 // EVENT LISTENERS
 window.addEventListener('load', onLoadHandler)
 travelDateButton.addEventListener('click', searchRoomsByDate)
-sideBarButton.addEventListener('click', openSideBar)
+sideBarOpenBtn.addEventListener('click', openSideBar)
 window.addEventListener('click', buttonViewHandler)
 searchBar2.addEventListener('input', searchCustomersByName)
 searchBar.addEventListener('input', searchAvailableRooms)
@@ -84,8 +85,12 @@ searchBar.addEventListener('input', searchAvailableRooms)
 
 // VIEW HANDLERS & Navigation Functionality
 function buttonViewHandler(event) {
-  if (event.target === sideBarButton) {
+  if (event.target === sideBarOpenBtn || sideBarCloseBtn) {
+    w3_open();
     openSideBar();
+  }
+  if (event.target === sideBarCloseBtn) {
+    w3_close();
   }
   if (event.target.classList.contains('customer-dash-tab')) {
     checkUserType()
@@ -99,13 +104,9 @@ function buttonViewHandler(event) {
   if (event.target.classList.contains('log-out-btn')) {
     logOut();
   }
-  // if (event.target.classList.contains('bookings-btn')) {
-  //     let bookingsToView = event.target.closest('.room-card').id
-  //     let thisUsersBookings = compileUserBookings(bookingsToView)
-  //     console.log(thisUsersBookings)
-  // }
+
 }
-function checkUserType() {
+function checkUserType(display) {
   console.log(userType)
   if (userType === 'manager') {
     viewManagerDash();
@@ -321,6 +322,7 @@ function searchCustomersByName(event) {
 }
 
 function bookRoomForCustomer () {
+  openSideBar()
   console.log('Here we goo')
 
 }
@@ -554,10 +556,10 @@ function grantAccess(event) {
   if (userType === 'manager') {
 
     alert('You have successfully logged in as a manager.');
-
+    userType = 'manager'
     todayDate = getTodayDate();
     chosenDate = "2020/02/07";
-    userType = 'manager'
+
     managerLoginViewHandler();
     getHotelStatsByDate(chosenDate)
     displayUsers(hotel.allCustomers)
@@ -585,4 +587,15 @@ function showLoginErrorMsg() {
 
 function logOut() {
   location.reload()
+}
+function w3_open() {
+  document.getElementById("main").style.marginLeft = "25%";
+  document.getElementById("mySidebar").style.width = "25%";
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("openNav").style.display = 'none';
+}
+function w3_close() {
+  document.getElementById("main").style.marginLeft = "0%";
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("openNav").style.display = "inline-block";
 }
