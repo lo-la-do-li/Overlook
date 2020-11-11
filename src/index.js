@@ -87,16 +87,16 @@ searchBar.addEventListener('input', searchAvailableRooms)
 function buttonViewHandler(event) {
   if (event.target === sideBarOpenBtn || sideBarCloseBtn) {
     w3_open();
-    openSideBar();
+    // openSideBar();
   }
   if (event.target === sideBarCloseBtn) {
     w3_close();
   }
   if (event.target.classList.contains('customer-dash-tab')) {
-    checkUserType()
+    checkUserType('dash')
   }
   if (event.target.classList.contains('search-results-tab')) {
-    viewSearchRooms();
+    checkUserType('search results')
   }
   if (event.target.classList.contains('search-users-tab')) {
     viewSearchUsers();
@@ -106,14 +106,51 @@ function buttonViewHandler(event) {
   }
 
 }
-function checkUserType(display) {
+function checkUserType(view) {
   console.log(userType)
-  if (userType === 'manager') {
+  if (userType === 'manager' && view === 'dash') {
     viewManagerDash();
-  } else {
+  }
+  if (userType === 'customer' && view === 'dash') {
     viewCustomerDash();
   }
+  if (userType === 'manager' && view === 'search results') {
+    viewSearchRooms();
+  }
+  if (userType === 'customer' && view === 'search results') {
+    viewSearchRooms();
+  }
 }
+// function buttonViewHandler(event) {
+//   if (event.target === sideBarOpenBtn || bookForCustomer) {
+//     w3_open();
+//     openSideBar();
+//   }
+//   if (event.target === sideBarCloseBtn) {
+//     w3_close();
+//   }
+//   if (event.target.classList.contains('customer-dash-tab')) {
+//     checkUserType()
+//   }
+//   if (event.target.classList.contains('search-results-tab')) {
+//     viewSearchRooms();
+//   }
+//   if (event.target.classList.contains('search-users-tab')) {
+//     viewSearchUsers();
+//   }
+//   if (event.target.classList.contains('log-out-btn')) {
+//     logOut();
+//   }
+//
+// }
+// function checkUserType(display) {
+//   console.log(userType)
+//   if (userType === 'manager') {
+//     viewManagerDash();
+//   } else {
+//     viewCustomerDash();
+//   }
+// }
 function viewUserBookings(event) {
   let bookingsToView = event.target.closest('.room-card').id
   // const closestElement = ('.room-card').closest('div');
@@ -158,6 +195,7 @@ function viewManagerDash() {
   // hideElement('search-bar');
   // showElement('containFlex');
   // showElement('welcome-msg');
+  w3_close()
   hideElement('customer-dashboard')
   showElement('manager-dashboard')
 
@@ -182,7 +220,7 @@ function viewSearchUsers() {
   hideElement('rooms-available-section')
   showElement('search-users-section');
   // hideElement('search-bar');
-  // showElement('search-bar2')
+  w3_close();
   hideElement('welcome-msg');
 }
 
@@ -199,6 +237,7 @@ function managerLoginViewHandler() {
   // hideElement('search-rooms')
   hideElement('rooms-available-section')
   hideElement('customer-dashboard')
+  w3_close()
 }
 function customerLoginViewHandler() {
   document.getElementById('login-section').style.display = 'none';
