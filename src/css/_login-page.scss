@@ -13,7 +13,6 @@
 
 #login-section {
   display: flex;
-  // display: none;
   justify-content: center;
   background-color: $dark-gray;
   height: 100vh;
@@ -36,8 +35,8 @@
   padding: 5px;
   font-size: 12px;
   font-weight: bold;
-  color: #8a0000;
-  border: 1px solid #8a0000;
+  color: $medium-gray;
+  border: 1px solid $medium-gray;
   background-color: #e58f8f;
   opacity: 0;
 }

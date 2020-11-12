@@ -6,7 +6,5 @@ class Booking {
     this.roomNumber = booking.roomNumber;
     this.roomServiceCharges = booking.roomServiceCharges || [];
   }
-  // getUserId() {
-  // return this.users.find(user => user.id === id)
 }
 export default Booking;
