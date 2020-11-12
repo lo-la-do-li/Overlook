@@ -277,7 +277,7 @@ function selectRoomToBook(event) {
     console.log(availableRooms)
     displayNewBooking(userBooking)
     apiCalls.addBookingData(newBookingData)
-    instantiateData(dataSet)
+    // instantiateData(dataSet)
     //Don't Delete Below! - for API call, POST
     // apiCalls.addBookingData(newBookingData)
   }
@@ -301,7 +301,7 @@ function viewUserBookings(event) {
   console.log(thisCustomer)
   let thisCustomersBookings = compileUserBookings(thisCustomer.id)
   console.log(thisCustomersBookings)
-  thisCustomersBookings = sortBookingsByDate(thisCustomersBookings)
+  sortBookingsByDate(thisCustomersBookings)
   thisCustomersBookings.forEach(booking => {
     let customerBooking =
 
@@ -323,32 +323,28 @@ function viewUserBookings(event) {
     </li>
     </ul>
     `
-    bookingsContainer.insertAdjacentHTML('beforeend', customerBooking)
+    bookingsContainer.insertAdjacentHTML('afterbegin', customerBooking)
     deleteBtn = document.querySelector('.delete-btn')
     deleteBtn.addEventListener('click', deleteBooking)
   })
 }
 
 function deleteBooking(event) {
+
   if (event.target.classList.contains('delete-btn')) {
+  let customerBookingCard = event.target.parentElement.closest(".flexBooking")
   let bookingToDeleteID = event.target.parentElement.closest(".flexBooking").id
   console.log(bookingToDeleteID)
+  let bookingToDelete = hotel.allBookings.find(booking => bookingToDeleteID === booking.id)
+  console.log(bookingToDelete, findCustomer(bookingToDelete.userId))
+  let thisUsersName = findCustomer(bookingToDelete.userId).name
 
-  let bookingToDelete = hotel.allBookings.find(booking => booking.id === bookingToDeleteID)
-  console.log(bookingToDelete)
+  let removedBookingData = {"id": bookingToDelete.id}
 
-let removedBookingData = {"id": bookingToDelete.id}
-console.log(removedBookingData)
-  // onclick="this.parentElement.style.display='none'" --> styling in html
   // apiCalls.deleteBookingData(removedBookingData)
+  customerBookingCard.style.display='none'
+  window.alert(`Booking for customer ${thisUsersName}, room${bookingToDelete.roomNumber} on ${bookingToDelete.date} has been deleted`)
   }
-}
-
-function updateAvailBookings() {
-  // instantiateData(dataSet)
-  console.log(availableRooms)
-  console.log(allSessionBookings)
-  // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
 }
 
 function searchCustomersByName(event) {
@@ -458,8 +454,8 @@ function displayNewBooking(booking) {
 function displayCustomerBookings(bookingSet) {
   instantiateData(dataSet)
   let userBookings = document.querySelector('.user-bookings')
-  let sortedBookingSet = sortBookingsByDate(bookingSet)
-  sortedBookingSet.forEach(booking => {
+  sortBookingsByDate(bookingSet)
+  bookingSet.forEach(booking => {
     let bookingCard =
 
     `
