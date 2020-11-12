@@ -12,7 +12,7 @@ const addData = (path, data) => {
     },
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
+  .then(response => console.log(response.json()))
   .catch(err => console.log(err))
 }
 
@@ -24,7 +24,7 @@ const deleteData = (path, data) => {
     },
     body: JSON.stringify(data),
   })
-  .then(response => response.json())
+  .then(response => console.log(response.json()))
   .catch(error => console.log(error))
 }
 

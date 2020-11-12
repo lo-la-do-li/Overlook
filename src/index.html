@@ -2,17 +2,14 @@
 <html lang="en-US">
 <head>
   <meta charset="UTF-8">
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <title>OverLook</title>
-
   <link rel="stylesheet" type="text/scss" href="styles.scss"/>
 </head>
 <body>
-
 <main>
   <div id="login-section">
     <div id="login-holder">
-      <h2 id="login-header">Please Login</h2>
+      <h2 id="login-header">Please login</br>to access Overlook</h2>
       <div id="login-error-msg-holder">
         <p id="login-error-msg">Invalid username <span id="error-msg-second-line">and/or password</span></p>
       </div>
@@ -24,11 +21,11 @@
     </div>
   </div>
 
-  <div class="dashboard">
-    <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
-      <button class="side-bar-close w3-button w3-large"
+  <div aria-label="dashboard-views" class="dashboard">
+    <div class="ol-sidebar ol-bar-block ol-card ol-animate-left" style="display:none" id="mySidebar">
+      <button aria-label="close-sidebar-button" class="side-bar-close ol-button ol-large"
       >Close &times;</button>
-      <div class="w3-container">
+      <div class="ol-container">
         <div class="find-room-card">
           <div class="calendar-container">
             <h2>Find a Room</h2>
@@ -43,20 +40,20 @@
     </div>
 
     <div id="main">
-      <div class="w3-teal">
+      <div class="ol-teal">
         <div class="navFlex">
-          <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn">&#9776;</button>
+          <button id="openNav" class="ol-button ol-teal ol-xlarge side-bar-btn">&#9776;</button>
 
-          <button class="customer-dash-tab w3-button w3-teal ">Dashboard</button>
+          <button class="customer-dash-tab ol-button ol-teal ">Dashboard</button>
 
-          <button class="search-results-tab w3-button w3-teal ">Search Results</button>
-          <button class="search-users-tab w3-button w3-teal hidden">Search Users</button>
+          <button class="search-results-tab ol-button ol-teal ">Search Results</button>
+          <button class="search-users-tab ol-button ol-teal hidden">Search Users</button>
 
 
-          <div class="w3-container navFlex" style="margin-left: auto;">
+          <div class="ol-container navFlex" style="margin-left: auto;">
             <div class="navFlex">
               <h4>OverLook</h4>
-              <button class="log-out-btn w3-button w3-teal ">Logout</button>
+              <button class="log-out-btn ol-button ol-teal ">Logout</button>
             </div>
           </div>
         </div>
@@ -70,7 +67,7 @@
             <div class="card">
               <div class="user-container">
                 <h4><b>Past and Current Bookings</b></h4>
-                <ul class="user-bookings w3-ul" style="width:100%; margin-bottom: 30px;">
+                <ul class="user-bookings ol-ul" style="width:100%; margin-bottom: 30px;">
                 </ul>
               </div>
             </div>
