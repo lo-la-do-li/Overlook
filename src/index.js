@@ -198,7 +198,7 @@ function customerLoginViewHandler() {
   showElement('customer-dashboard');
 }
 
-// USER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
+// USER & MANAGER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
 function filterBookingsByDate(date) {
   return hotel.allBookings.filter(booking => booking.date === date)
 }
@@ -247,27 +247,20 @@ function selectRoomToBook(event) {
     roomToBook = event.target.closest('.available-room-container').id
     console.log('roomToBook', roomToBook)
     if (userType === 'manager') {
-      console.log('this room is being booked for customer', thisUser.id)
+      console.log('this room is being booked for customer:', thisUser.id)
 
       bookARoom(thisUser, roomToBook, chosenDate)
       console.log(thisUser, roomToBook, chosenDate)
     }
     if (userType === 'customer') {
-      console.log('this room is being booked for customer', customerIdToBook)
+      console.log('this room is being booked for customer:', customerIdToBook)
       bookARoom(validUser, roomToBook, chosenDate)
       console.log(validUser, roomToBook, chosenDate)
       viewCustomerDash();
     }
-    // bookARoom(idToken)
   }
 
   function bookARoom(selectedUser, roomToBook, chosenDate) {
-
-    // console.log(chosenDate)
-    // if (event.target.classList.contains('book-button')) {
-    //   roomToBook = event.target.closest('.available-room-container').id
-    //   // let roomNumber = parseInt(roomToBook)
-    //   console.log('roomToBook', roomToBook)
     newBookingData = {"userID": selectedUser.id, "date": chosenDate, "roomNumber": roomToBook}
     console.log('newBookingData', newBookingData)
 
@@ -441,8 +434,6 @@ function displayNewBooking(booking) {
   <li class="w3-padding-large" id="${booking.id}"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
   </li>
   `
-
-
   userBookings.insertAdjacentHTML('afterbegin', newBookingCard)
 }
 
@@ -501,7 +492,6 @@ function displayUsers(users) {
     </div>
     </div>
     `
-
     usersDocket.insertAdjacentHTML('afterbegin', userCard)
     viewBookingsBtn = document.querySelector('.bookings-btn');
     bookForCustomer = document.querySelector('.book-customer-button');
@@ -525,7 +515,6 @@ function getTodayDate() {
 function getTotalRevenue() {
   let totalDailyRevenue = bookedRooms.reduce((totalRevenue, room) => {
     totalRevenue += room.costPerNight
-    console.log(room.number,':', room.costPerNight)
     return totalRevenue
   }, 0)
   console.log('total Daily Revenue', totalDailyRevenue)
@@ -533,10 +522,10 @@ function getTotalRevenue() {
 }
 
 function getRoomsFromBookings(bookings) {
-  bookedRooms = bookings.reduce((acc, bookedRoom) => {
+  bookedRooms = bookings.reduce((allRoomsTaken, bookedRoom) => {
     bookedRoom = hotel.allRooms.find(room => bookedRoom.roomNumber === room.number)
-    acc.push(bookedRoom)
-    return acc
+    allRoomsTaken.push(bookedRoom)
+    return allRoomsTaken
   },[])
   return bookedRooms
 }
