@@ -1,8 +1,7 @@
-<<<<<<< HEAD
+
 # OverLook Hotel Project
-=======
-# Overlook Hotel Project
->>>>>>> ca3e94988a3418c4cc6db022ce91387acf51176c
+---
+
 ## Author
 [Lola Dolinsky](https://github.com/lo-la-do-li)
 
@@ -26,13 +25,7 @@
 + Solidify the code review process
 + Create a test suite that thoroughly tests all functionality of a client-side application
 ---
-<<<<<<< HEAD
-## Challenges
-+
-## Wins
-=======
 
->>>>>>> ca3e94988a3418c4cc6db022ce91387acf51176c
 ## Setup
 + Clone down this repo to your local computer.
 + CD into the project directory.
