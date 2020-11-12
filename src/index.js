@@ -6,14 +6,19 @@ import User from './User'
 import HotelManagement from './HotelManagement'
 import Room from './Room'
 import Booking from './Booking'
+// import views from './views'
 
 //Variables
+let customerIdToBook
+let thisUser;
 let dataSet;
 let allBookings;
 let allCustomers;
 let allRooms;
 let hotel;
-let userType
+let userType;
+let idToken;
+let validUser;
 
 let availableRooms = []
 let currentBookings = []
@@ -44,9 +49,10 @@ let roomsAvailableSection = document.querySelector('.rooms-available-section')
 let searchUsersSection = document.querySelector('.search-users-section')
 let searchBar2 = document.querySelector('.search-bar2')
 let searchBar = document.querySelector('.search-bar')
-let sideBarOpenBtn = document.querySelector('.side-bar-btn')
+let sideBarOpenBtn = document.getElementById('openNav')
 let sideBarCloseBtn = document.querySelector('.side-bar-close')
 let usersDocket = document.querySelector('.user-list')
+let customerBookingHeader =document.querySelector('.customer-booking-for')
 
 //Initial APIS
 Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBookingData()])
@@ -85,7 +91,7 @@ searchBar.addEventListener('input', searchAvailableRooms)
 
 // VIEW HANDLERS & Navigation Functionality
 function buttonViewHandler(event) {
-  if (event.target === sideBarOpenBtn || sideBarCloseBtn) {
+  if (event.target === sideBarOpenBtn) {
     w3_open();
     // openSideBar();
   }
@@ -104,8 +110,8 @@ function buttonViewHandler(event) {
   if (event.target.classList.contains('log-out-btn')) {
     logOut();
   }
-
 }
+
 function checkUserType(view) {
   console.log(userType)
   if (userType === 'manager' && view === 'dash') {
@@ -121,64 +127,6 @@ function checkUserType(view) {
     viewSearchRooms();
   }
 }
-// function buttonViewHandler(event) {
-//   if (event.target === sideBarOpenBtn || bookForCustomer) {
-//     w3_open();
-//     openSideBar();
-//   }
-//   if (event.target === sideBarCloseBtn) {
-//     w3_close();
-//   }
-//   if (event.target.classList.contains('customer-dash-tab')) {
-//     checkUserType()
-//   }
-//   if (event.target.classList.contains('search-results-tab')) {
-//     viewSearchRooms();
-//   }
-//   if (event.target.classList.contains('search-users-tab')) {
-//     viewSearchUsers();
-//   }
-//   if (event.target.classList.contains('log-out-btn')) {
-//     logOut();
-//   }
-//
-// }
-// function checkUserType(display) {
-//   console.log(userType)
-//   if (userType === 'manager') {
-//     viewManagerDash();
-//   } else {
-//     viewCustomerDash();
-//   }
-// }
-function viewUserBookings(event) {
-  let bookingsToView = event.target.closest('.room-card').id
-  // const closestElement = ('.room-card').closest('div');
-    const content = event.target.closest('.collapsible')
-   var bookingsContainer =  content.nextElementSibling;
-
-    if (bookingsContainer.style.display === "block") {
-          bookingsContainer.style.display = "none";
-        } else {
-          bookingsContainer.style.display = "block";
-        }
-
-  let thisCustomer = findCustomer(+bookingsToView)
-  console.log(thisCustomer)
-  let thisCustomersBookings = compileUserBookings(thisCustomer.id)
-  console.log(thisCustomersBookings)
-
-  thisCustomersBookings.forEach(booking => {
-  let customerBooking =
-  `<ul>
-<li>${booking.id}</li>
-  </ul>
-  `
-  bookingsContainer.insertAdjacentHTML('afterbegin', customerBooking)
-})
-
-}
-
 
 function viewCustomerDash() {
   hideElement('search-users-section');
@@ -198,11 +146,11 @@ function viewManagerDash() {
   w3_close()
   hideElement('customer-dashboard')
   showElement('manager-dashboard')
-
 }
 
 
 function viewSearchRooms() {
+
   // hideElement('containFlex');
   hideElement('welcome-msg');
   // showElement('rooms-available');
@@ -220,7 +168,7 @@ function viewSearchUsers() {
   hideElement('rooms-available-section')
   showElement('search-users-section');
   // hideElement('search-bar');
-  w3_close();
+  // w3_close();
   hideElement('welcome-msg');
 }
 
@@ -243,6 +191,7 @@ function customerLoginViewHandler() {
   document.getElementById('login-section').style.display = 'none';
   hideElement('search-users-tab');
   hideElement('manager-dashboard');
+  hideElement('rooms-available-section')
   showElement('dashboard');
   document.querySelector('.search-users-tab').style.display = 'none';
   hideElement('search-users-tab');
@@ -251,65 +200,80 @@ function customerLoginViewHandler() {
 
 // USER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
 function filterBookingsByDate(date) {
-return hotel.allBookings.filter(booking => booking.date === date)
+  return hotel.allBookings.filter(booking => booking.date === date)
 }
 
 function searchRoomsByDate() {
-  hideElement('customer-dashboard')
+  console.log(userType)
   chosenDate = travelInput.value.replace(/-/g, "/")
   findAvailableRooms();
   displayAvailableRooms(availableRooms);
 }
 
 function findAvailableRooms() {
-  // console.log('hotel.allRooms', hotel.allRooms)
-
+  availableRooms = []
   currentBookings = filterBookingsByDate(chosenDate)
   // console.log('current bookings:', currentBookings)
 
   getRoomsFromBookings(currentBookings)
   // console.log('booked rooms:', bookedRooms)
-
   bookingRoomNumbers = currentBookings.map(booking => booking.roomNumber)
   // console.log('bookingRoomNumbers', bookingRoomNumbers)
 
-  availableRooms = hotel.allRooms.reduce((acc, availableRoom) => {
-      if(!bookingRoomNumbers.includes(availableRoom.number))
-       acc.push(availableRoom)
-       return acc
-    },[])
-  // console.log('available rooms:', availableRooms)
-    return availableRooms
+  availableRooms = hotel.allRooms.filter(room => !bookingRoomNumbers.includes(room.number))
+  console.log(availableRooms)
+
+  return availableRooms
 }
 function displaySearchErrorMessage() {
 
 }
 function searchAvailableRooms(event) {
   let searchInput = event.target.value;
-hideElement('customer-dashboard')
-hideElement('manager-dashboard')
+  hideElement('customer-dashboard')
+  hideElement('manager-dashboard')
 
   let roomSearchResults = availableRooms.filter(room => {
- return (
-   room.roomType.toLowerCase().includes(searchInput)
- );
-});
+    return (
+      room.roomType.toLowerCase().includes(searchInput)
+    );
+  });
 
   displayAvailableRooms(roomSearchResults)
 }
 
-function bookARoom(event) {
-  // console.log(chosenDate)
+function selectRoomToBook(event) {
   if (event.target.classList.contains('book-button')) {
-    roomToBook = event.target.closest('.room-card').id
-    // let roomNumber = parseInt(roomToBook)
+    roomToBook = event.target.closest('.available-room-container').id
     console.log('roomToBook', roomToBook)
-    newBookingData = {"userID": 2, "date": chosenDate, "roomNumber": roomToBook}
+    if (userType === 'manager') {
+      console.log('this room is being booked for customer', thisUser.id)
+
+      bookARoom(thisUser, roomToBook, chosenDate)
+      console.log(thisUser, roomToBook, chosenDate)
+    }
+    if (userType === 'customer') {
+      console.log('this room is being booked for customer', customerIdToBook)
+      bookARoom(validUser, roomToBook, chosenDate)
+      console.log(validUser, roomToBook, chosenDate)
+      viewCustomerDash();
+    }
+    // bookARoom(idToken)
+  }
+
+  function bookARoom(selectedUser, roomToBook, chosenDate) {
+
+    // console.log(chosenDate)
+    // if (event.target.classList.contains('book-button')) {
+    //   roomToBook = event.target.closest('.available-room-container').id
+    //   // let roomNumber = parseInt(roomToBook)
+    //   console.log('roomToBook', roomToBook)
+    newBookingData = {"userID": selectedUser.id, "date": chosenDate, "roomNumber": roomToBook}
     console.log('newBookingData', newBookingData)
 
     userBooking = new Booking(newBookingData)
-    allSessionBookings.push(userBooking)
-    console.log('allSessionBookings', allSessionBookings)
+    selectedUser.bookings.push(userBooking)
+    console.log('selectedUser Bookings', selectedUser.bookings)
 
     console.log('availableRooms', availableRooms)
     // updateAvailBookings()
@@ -318,10 +282,9 @@ function bookARoom(event) {
     console.log(newRoomCount)
     displayAvailableRooms(availableRooms)
     console.log(availableRooms)
-    // allSessionBookings.push(newRoomCount.number)
-    // updateAvailBookings()
+
     displayNewBooking(userBooking)
-    viewCustomerDash();
+
     //Don't Delete Below! - for API call, POST
     // apiCalls.addBookingData(newBookingData)
   }
@@ -334,38 +297,81 @@ function updateAvailBookings() {
   // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
 }
 // MANAGER FUNCTIONALITY: SEARCH USERS AND BOOK -----------------------------------
+function viewUserBookings(event) {
+  w3_close()
+  let bookingsToView = event.target.closest('.customer-card').id
+  // const closestElement = ('.room-card').closest('div');
+  const content = event.target.closest('.collapsible')
+  let bookingsContainer =  content.nextElementSibling;
 
+  if (bookingsContainer.style.display === "block") {
+    bookingsContainer.style.display = "none";
+  } else {
+    bookingsContainer.style.display = "block";
+  }
 
-function displaySearchUserError() {
-let errorCard =
-`<div class="room-specs">
-  <h3>Sorry! No users match that name</h3>
-  <input type="button" class="booking-btn" value="View Bookings">
-</div>
-`
-document.querySelector('user-list').insertAdjacentHTML('afterbegin', errorCard)
+  let thisCustomer = findCustomer(+bookingsToView)
+  console.log(thisCustomer)
+  let thisCustomersBookings = compileUserBookings(thisCustomer.id)
+  console.log(thisCustomersBookings)
+
+  thisCustomersBookings.forEach(booking => {
+    let customerBooking =
+
+    `
+    <ul class="w3-ul w3-card-4">
+    <li class="w3-display-container">
+    <div class="flexBooking">
+    <div>
+    ${booking.id}
+    </div>
+    <div>
+    ${booking.date}
+    </div>
+    <div>
+    ${booking.roomNumber}
+    </div>
+    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-transparent w3-display-right">&times;</span>
+    </div>
+    </li>
+    </ul>
+    `
+    bookingsContainer.insertAdjacentHTML('afterbegin', customerBooking)
+  })
 }
 
-// document.querySelector('user-list').insertAdjacentHTML('afterbegin', errorCard)
 function searchCustomersByName(event) {
   console.log(hotel.allCustomers)
   let searchNameInput = event.target.value.toLowerCase()
   console.log(searchNameInput)
-   customerSearchResults = hotel.allCustomers.filter(customer => {
-  return (
-    customer.name.toLowerCase().includes(searchNameInput)
-  );
-});
+  customerSearchResults = hotel.allCustomers.filter(customer => {
+    return customer.name.toLowerCase().includes(searchNameInput)
+
+  });
   console.log(customerSearchResults)
   displayUsers(customerSearchResults);
 }
 
-function bookRoomForCustomer () {
-  openSideBar()
-  console.log('Here we goo')
-
+function bookRoomForCustomer(event) {
+  customerIdToBook = event.target.closest('.customer-card').id
+  thisUser = findCustomer(+customerIdToBook)
+  console.log('Here we goo', customerIdToBook, thisUser)
+  customerBookingHeader.innerText = `${thisUser.name}`
+  w3_open()
+  viewSearchRooms()
+  return thisUser
+  // bookAroom(idToken)
 }
 
+function displaySearchUserError() {
+  let errorCard =
+  `<div class="room-specs">
+  <h3>Sorry! No users match that name</h3>
+  <input type="button" class="booking-btn" value="View Bookings">
+  </div>
+  `
+  document.querySelector('user-list').insertAdjacentHTML('afterbegin', errorCard)
+}
 
 //MOVE TO domUpdates.js ------------------------------------------------
 
@@ -381,7 +387,6 @@ function displayHotelStats(numberOfRooms, percentBooked, totalRevenue) {
   document.querySelector('.total-rooms').innerHTML = numberOfRooms
   document.querySelector('.percent-booked').innerHTML = `${percentBooked}%`
   document.querySelector('.total-revenue').innerHTML = '$' + totalRevenue
-
 }
 
 function displayTotalSpentOnBookings(customerBookings) {
@@ -396,35 +401,35 @@ function displayAvailableRooms(roomSet) {
     const roomCard =
     `
     <div class="w3-container">
-      <div class="room-card" id=${room.number}>
-        <div class="container">
-          <div class="room-specs">
-            <h3>${room.roomType}</h3>
-            <div class="navFlex">
-            <p><b>Room Number:</b></p>
-            <p>${room.number}</p>
-            </div>
-            <div class="navFlex">
-            <p><b>Bedsize:</b></p>
-            <p> ${room.bedSize}</p>
-            </div>
-            <div class="navFlex">
-            <p><b>Bed #:</b></p>
-            <p> ${room.numBeds}</p>
-            </div>
-            <div class="navFlex">
-            <p><b>Cost:</b></p>
-            <p>${" $" + room.costPerNight}</p>
-            </div>
-            <input type="button" class="book-button" value="Book">
-          </div>
-        </div>
-      </div>
+    <div class="room-card">
+    <div class="available-room-container" id=${room.number}>
+    <div class="room-specs">
+    <h3>${room.roomType}</h3>
+    <div class="navFlex">
+    <p><b>Room Number:</b></p>
+    <p>${room.number}</p>
+    </div>
+    <div class="navFlex">
+    <p><b>Bedsize:</b></p>
+    <p> ${room.bedSize}</p>
+    </div>
+    <div class="navFlex">
+    <p><b>Bed #:</b></p>
+    <p> ${room.numBeds}</p>
+    </div>
+    <div class="navFlex">
+    <p><b>Cost:</b></p>
+    <p>${" $" + room.costPerNight}</p>
+    </div>
+    <input type="button" class="book-button" value="Book">
+    </div>
+    </div>
+    </div>
     </div>
     `
     roomsDisplay.insertAdjacentHTML('afterbegin', roomCard);
     bookButton = document.querySelector('.book-button');
-    bookButton.addEventListener('click', bookARoom);
+    bookButton.addEventListener('click', selectRoomToBook);
   })
 }
 
@@ -433,9 +438,11 @@ function displayNewBooking(booking) {
 
   let newBookingCard =
   `
-  <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
+  <li class="w3-padding-large" id="${booking.id}"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
   </li>
   `
+
+
   userBookings.insertAdjacentHTML('afterbegin', newBookingCard)
 }
 
@@ -443,14 +450,13 @@ function displayCustomerBookings(bookingSet) {
   let userBookings = document.querySelector('.user-bookings')
   sortBookingsByDate(bookingSet)
   bookingSet.forEach(booking => {
+    let bookingCard =
 
-  let bookingCard =
-
-  `
-  <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
-  </li>
-  `
-  userBookings.insertAdjacentHTML('afterbegin', bookingCard)
+    `
+    <li class="w3-padding-large" id="${booking.id}"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
+    </li>
+    `
+    userBookings.insertAdjacentHTML('afterbegin', bookingCard)
   })
 }
 
@@ -459,33 +465,31 @@ function displayUsers(users) {
   usersDocket.innerHTML = ''
   users.forEach(user => {
 
-  let userCard =
-  `
-  <div class="w3-container">
-    <div class="room-card collapsible" id=${user.id}>
-      <div class="container ">
-        <div class="room-specs">
-          <h3>${user.name}</h3>
-          <div>
-          <input type="button" class="bookings-btn" value="View Bookings">
-          <input type="button" class="book-customer-button" value="Book Room">
-          </div>
-        </div>
-      </div>
+    let userCard =
+    `
+    <div class="w3-container">
+    <div class="customer-card collapsible" id=${user.id}>
+    <div class="container">
+    <div class="customer-specs" id=${user.id}>
+    <h3>${user.name}</h3>
+    <div>
+    <input type="button" class="bookings-btn" value="View Bookings">
+    <input type="button" class="book-customer-button" value="Book Room">
+    </div>
+    </div>
+    </div>
     </div>
     <div class="content">
 
-</div>
-  </div>
-  `
+    </div>
+    </div>
+    `
 
-  usersDocket.insertAdjacentHTML('afterbegin', userCard)
-  viewBookingsBtn = document.querySelector('.bookings-btn');
-  bookForCustomer = document.querySelector('.book-customer-button');
-  viewBookingsBtn.addEventListener('click', viewUserBookings);
-  bookForCustomer.addEventListener('click', bookRoomForCustomer);
-
-
+    usersDocket.insertAdjacentHTML('afterbegin', userCard)
+    viewBookingsBtn = document.querySelector('.bookings-btn');
+    bookForCustomer = document.querySelector('.book-customer-button');
+    viewBookingsBtn.addEventListener('click', viewUserBookings);
+    bookForCustomer.addEventListener('click', bookRoomForCustomer);
   })
 }
 
@@ -514,8 +518,8 @@ function getTotalRevenue() {
 function getRoomsFromBookings(bookings) {
   bookedRooms = bookings.reduce((acc, bookedRoom) => {
     bookedRoom = hotel.allRooms.find(room => bookedRoom.roomNumber === room.number)
-     acc.push(bookedRoom)
-     return acc
+    acc.push(bookedRoom)
+    return acc
   },[])
   return bookedRooms
 }
@@ -555,7 +559,7 @@ function compileUserBookings(idNum) {
 
 function sortBookingsByDate(bookingSet) {
   let bookingsByDate = bookingSet.sort((bookingA, bookingB) => {
-     return new Date(bookingA.date) - new Date(bookingB.date)
+    return new Date(bookingA.date) - new Date(bookingB.date)
   })
   return bookingsByDate
 }
@@ -584,8 +588,8 @@ function grantAccess(event) {
   let password = loginForm.password.value;
 
   userType = username.split('').splice(0, 8).join('').toLowerCase();
-  let idToken = parseInt(username.slice([8]));
-  let validUser = findCustomer(idToken)
+  idToken = parseInt(username.slice([8]));
+  validUser = findCustomer(idToken)
   console.log(userType, idToken, validUser)
 
   if (password !== 'overlook2020') {
@@ -628,6 +632,7 @@ function logOut() {
   location.reload()
 }
 function w3_open() {
+  viewSearchRooms()
   document.getElementById("main").style.marginLeft = "25%";
   document.getElementById("mySidebar").style.width = "25%";
   document.getElementById("mySidebar").style.display = "block";

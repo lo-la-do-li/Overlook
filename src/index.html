@@ -32,10 +32,10 @@
   <div class="dashboard">
     <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
       <button class="side-bar-close w3-button w3-large"
-      onclick="w3_close()">Close &times;</button>
+      >Close &times;</button>
       <div class="w3-container">
         <div class="find-room-card">
-          <div class="container">
+          <div class="calendar-container">
             <h2>Find a Room</h2>
             <form>
               <label for="travel-date">Desired Date:</label>
@@ -50,7 +50,7 @@
     <div id="main">
       <div class="w3-teal">
         <div class="navFlex">
-          <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn" onclick="w3_open()">&#9776;</button>
+          <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn">&#9776;</button>
           <!-- <button id="openNav" class="w3-button w3-teal w3-xlarge side-bar-btn" onclick="w3_open()" style="display: none;">☰</button> -->
 
           <button class="customer-dash-tab w3-button w3-teal ">Dashboard</button>
@@ -127,6 +127,7 @@
 
       <section class="rooms-available-section">
         <form>
+          <label>Search room for: <h2 class="customer-booking-for"></h2></label>
           <input type="text" name="search" class="search-bar search-rooms" onfocus=”this.value=”;” placeholder="Search By Room Type..">
         </form>
         <div>
