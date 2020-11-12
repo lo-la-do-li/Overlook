@@ -336,7 +336,7 @@ function viewUserBookings(event) {
     </li>
     </ul>
     `
-    bookingsContainer.insertAdjacentHTML('afterbegin', customerBooking)
+    bookingsContainer.insertAdjacentHTML('beforeEnd', customerBooking)
   })
 }
 
@@ -480,7 +480,24 @@ function displayUsers(users) {
     </div>
     </div>
     <div class="content">
-
+    <ul class="w3-ul w3-card-4">
+    <li class="w3-display-container">
+    <div class="flexBooking">
+    <div>
+    <b>Booking ID</b>
+    </div>
+    <div>
+    <b>Booking Date</b>
+    </div>
+    <div>
+    <b>Room Number</b>
+    </div>
+    <div>
+    <b>Delete Booking</b>
+    </div>
+    </div>
+    </li>
+    </ul>
     </div>
     </div>
     `

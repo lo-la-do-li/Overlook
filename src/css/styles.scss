@@ -65,7 +65,19 @@ button, input, select, textarea, optgroup {
   background-color: #009688;
   border: none;
   color: white;
-  padding: 5px 20px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+.book-customer-button {
+  // background-color: #009688;
+  border: none;
+  color: black;
+  padding: 10px 20px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -81,6 +93,7 @@ button, input, select, textarea, optgroup {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 10px
 }
 
 .container, .calendar-container, .available-room-container, .manager-container, .user-container {
