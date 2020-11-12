@@ -38,18 +38,15 @@
 ## Hotel Overlook
 
 ### Customer Dashboard
-The user will see this as their main view when they load the page.
 ![View Customer Dashboard](src/images/customer-dashboard.png)
 
 ### Manager Dashboard
-The user can click on the buttons on the card to get more information, both about their own stats and stats aggregated from all users.
 ![View Manager Dashboard](src/images/manager-dashboard.png)
 
 ## Manager View All Customers
 ![Access all customers at Hotel Overlook](src/images/search-customers.png)
 
 ### Search Available Rooms
-The user can also click on the profile icon in the upper right hand corner to see some additional profile information and stats from their friends.
 ![Click the sidebar icon to select a date for your stay](src/images/book-for-customers.png)
 
 ---
