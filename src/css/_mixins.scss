@@ -1,0 +1,13 @@
+
+@mixin big-button-styles($padding-top, $padding-right) {
+  padding-top: $padding-top;
+  padding-bottom: $padding-top;
+  padding-right: $padding-right;
+  background-color: $teal;
+  color: $primary-background;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+}

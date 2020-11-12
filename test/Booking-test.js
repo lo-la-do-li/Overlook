@@ -7,7 +7,7 @@ describe('Booking', () => {
   let booking;
 
   beforeEach(() => {
-    booking = new Booking({"id": "5fwrgu4i7k55hl6tl", "userId": 3, "date": "2020/01/10", "roomNumber": 8, "roomServiceCharges": []});
+    booking = new Booking({"id": "5fwrgu4i7k55hl6tl", "userID": 3, "date": "2020/01/10", "roomNumber": 8, "roomServiceCharges": []});
   });
 
   it('should be a function', () => {
@@ -27,9 +27,8 @@ describe('Booking', () => {
   });
 
   it('should have a user ID', () => {
-    console.log(booking.userID)
-    // expect(booking.userID).to.be.a('number');
-    expect(booking.userId).to.equal(3);
+    expect(booking.userID).to.be.a('number');
+    expect(booking.userID).to.equal(3);
   });
 
   it('should have a date', () => {
