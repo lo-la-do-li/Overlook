@@ -1,4 +1,4 @@
-# Refactor Tractor Group Project: FitLit
+# Overlook Hotel Project
 ## Author
 [Lola Dolinsky](https://github.com/lo-la-do-li)
 
@@ -22,9 +22,7 @@
 + Solidify the code review process
 + Create a test suite that thoroughly tests all functionality of a client-side application
 ---
-## Challenges
-+ 
-## Wins
+
 ## Setup
 + Clone down this repo to your local computer.
 + CD into the project directory.
