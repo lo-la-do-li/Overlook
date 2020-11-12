@@ -6,32 +6,39 @@ import User from './User'
 import HotelManagement from './HotelManagement'
 import Room from './Room'
 import Booking from './Booking'
+// import views from './views'
 
 //Variables
+let customerIdToBook
+let thisUser;
 let dataSet;
 let allBookings;
 let allCustomers;
 let allRooms;
 let hotel;
+let userType;
+let idToken;
+let validUser;
 
 let availableRooms = []
 let currentBookings = []
 let bookingRoomNumbers = []
 let bookedRooms = []
-
-
+let thisCustomer;
 let userBooking;
 let roomToBook;
 let numberOfRooms;
+let bookForCustomer
 
 let searchResults = [];
 let chosenDate;
 let todayDate;
+let customerSearchResults = [];
 
 let newBookingData;
 let bookButton;
+let viewBookingsBtn;
 let allSessionBookings = [];
-
 
 
 //QuerySelectors
@@ -39,10 +46,13 @@ let travelDateButton = document.querySelector('.button');
 let travelInput = document.getElementById('travel-date');
 let roomsDisplay = document.querySelector('.rooms-available');
 let roomsAvailableSection = document.querySelector('.rooms-available-section')
-// let customerDashBoard = document.querySelector('.customer-dashboard')
-// let managerDashboard = document.querySelector('.manager-dashboard')
+let searchUsersSection = document.querySelector('.search-users-section')
+let searchBar2 = document.querySelector('.search-bar2')
 let searchBar = document.querySelector('.search-bar')
-let sideBarButton = document.querySelector('.side-bar-btn')
+let sideBarOpenBtn = document.getElementById('openNav')
+let sideBarCloseBtn = document.querySelector('.side-bar-close')
+let usersDocket = document.querySelector('.user-list')
+let customerBookingHeader =document.querySelector('.customer-booking-for')
 
 //Initial APIS
 Promise.all([apiCalls.getUserData(), apiCalls.getRoomData(), apiCalls.getBookingData()])
@@ -73,118 +83,197 @@ function instantiateData(data) {
 // EVENT LISTENERS
 window.addEventListener('load', onLoadHandler)
 travelDateButton.addEventListener('click', searchRoomsByDate)
-sideBarButton.addEventListener('click', openSideBar)
+sideBarOpenBtn.addEventListener('click', openSideBar)
 window.addEventListener('click', buttonViewHandler)
+searchBar2.addEventListener('input', searchCustomersByName)
 searchBar.addEventListener('input', searchAvailableRooms)
 // bookButton.addEventListener('click', bookARoom)
 
 // VIEW HANDLERS & Navigation Functionality
 function buttonViewHandler(event) {
-  if (event.target === sideBarButton) {
-    openSideBar();
+  if (event.target === sideBarOpenBtn) {
+    w3_open();
+    // openSideBar();
+  }
+  if (event.target === sideBarCloseBtn) {
+    w3_close();
   }
   if (event.target.classList.contains('customer-dash-tab')) {
-    viewCustomerDash();
+    checkUserType('dash')
   }
   if (event.target.classList.contains('search-results-tab')) {
-    viewSearchRooms();
+    checkUserType('search results')
+  }
+  if (event.target.classList.contains('search-users-tab')) {
+    viewSearchUsers();
   }
   if (event.target.classList.contains('log-out-btn')) {
     logOut();
   }
 }
 
-function viewCustomerDash() {
-  showElement('containFlex');
-  hideElement('rooms-available');
-  hideElement('search-bar');
-  // w3_close();
-}
-function viewSearchRooms() {
-  hideElement('containFlex');
-  showElement('rooms-available');
-  showElement('search-bar');
-  // w3_open();
-}
-function openSideBar() {
-  searchBar.classList.remove('hidden')
-  hideElement('containFlex')
+function checkUserType(view) {
+  console.log(userType)
+  if (userType === 'manager' && view === 'dash') {
+    viewManagerDash();
+  }
+  if (userType === 'customer' && view === 'dash') {
+    viewCustomerDash();
+  }
+  if (userType === 'manager' && view === 'search results') {
+    viewSearchRooms();
+  }
+  if (userType === 'customer' && view === 'search results') {
+    viewSearchRooms();
+  }
 }
 
-function searchRoomsByDate () {
+function viewCustomerDash() {
+  hideElement('search-users-section');
+  hideElement('rooms-available-section');
+  showElement('containFlex');
+  showElement('welcome-msg');
+  showElement('customer-dashboard')
+
+  // showElement('manager-dashboard');
+}
+
+function viewManagerDash() {
+  hideElement('rooms-available-section');
+  // hideElement('search-bar');
+  // showElement('containFlex');
+  // showElement('welcome-msg');
+  w3_close()
+  hideElement('customer-dashboard')
+  showElement('manager-dashboard')
+}
+
+
+function viewSearchRooms() {
+
+  // hideElement('containFlex');
+  hideElement('welcome-msg');
+  // showElement('rooms-available');
+  showElement('rooms-available-section');
+  hideElement('search-users-section')
+  hideElement('manager-dashboard')
+  hideElement('customer-dashboard')
+  // showElement('search-bar');
+
+}
+function viewSearchUsers() {
+  hideElement('manager-dashboard');
+  // hideElement('welcome-msg');
+  // hideElement('rooms-available');
+  hideElement('rooms-available-section')
+  showElement('search-users-section');
+  // hideElement('search-bar');
+  // w3_close();
+  hideElement('welcome-msg');
+}
+
+function openSideBar() {
+  searchBar.classList.remove('hidden');
+  hideElement('containFlex');
+  hideElement('welcome-msg');
+}
+
+function managerLoginViewHandler() {
+  document.getElementById('login-section').style.display = 'none';
+  showElement('dashboard');
+  hideElement('search-users-section');
+  // hideElement('search-rooms')
+  hideElement('rooms-available-section')
+  hideElement('customer-dashboard')
+  w3_close()
+}
+function customerLoginViewHandler() {
+  document.getElementById('login-section').style.display = 'none';
+  hideElement('search-users-tab');
+  hideElement('manager-dashboard');
+  hideElement('rooms-available-section')
+  showElement('dashboard');
+  document.querySelector('.search-users-tab').style.display = 'none';
+  hideElement('search-users-tab');
+  showElement('customer-dashboard');
+}
+
+// USER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
+function filterBookingsByDate(date) {
+  return hotel.allBookings.filter(booking => booking.date === date)
+}
+
+function searchRoomsByDate() {
+  console.log(userType)
   chosenDate = travelInput.value.replace(/-/g, "/")
   findAvailableRooms();
   displayAvailableRooms(availableRooms);
 }
 
-function managerViewHandler() {
-  document.getElementById('login-section').style.display = 'none';
-  showElement('dashboard');
-  hideElement('rooms-available-section');
-}
-function customerViewHandler() {
-  document.getElementById('login-section').style.display = 'none';
-  showElement('dashboard');
-  showElement('customer-dashboard');
-  hideElement('manager-dashboard');
-}
-
-// USER FUNCTIONALITY: BOOKINGS AND ROOMS ------------------------------------------------
-function filterBookingsByDate(date) {
-return hotel.allBookings.filter(booking => booking.date === date)
-}
-
 function findAvailableRooms() {
-  // console.log('hotel.allRooms', hotel.allRooms)
-
+  availableRooms = []
   currentBookings = filterBookingsByDate(chosenDate)
   // console.log('current bookings:', currentBookings)
 
   getRoomsFromBookings(currentBookings)
   // console.log('booked rooms:', bookedRooms)
-
   bookingRoomNumbers = currentBookings.map(booking => booking.roomNumber)
   // console.log('bookingRoomNumbers', bookingRoomNumbers)
 
-  availableRooms = hotel.allRooms.reduce((acc, availableRoom) => {
-      if(!bookingRoomNumbers.includes(availableRoom.number))
-       acc.push(availableRoom)
-       return acc
-    },[])
-  // console.log('available rooms:', availableRooms)
-    return availableRooms
-}
+  availableRooms = hotel.allRooms.filter(room => !bookingRoomNumbers.includes(room.number))
+  console.log(availableRooms)
 
+  return availableRooms
+}
+function displaySearchErrorMessage() {
+
+}
 function searchAvailableRooms(event) {
   let searchInput = event.target.value;
+  hideElement('customer-dashboard')
+  hideElement('manager-dashboard')
 
-  searchResults = availableRooms.reduce((searchMatches, room) => {
-    if (searchInput === room.roomType) {
-      console.log(room)
-       searchMatches.push(room)
-       return searchMatches
-    } else if (!searchInput) {
-      return displayAvailableRooms(availableRooms)
-    }
-    console.log(searchMatches)
-    return searchMatches
-  }, [])
+  let roomSearchResults = availableRooms.filter(room => {
+    return (
+      room.roomType.toLowerCase().includes(searchInput)
+    );
+  });
 
-  displayAvailableRooms(searchResults)
+  displayAvailableRooms(roomSearchResults)
 }
 
-function bookARoom(event) {
-  // console.log(chosenDate)
+function selectRoomToBook(event) {
   if (event.target.classList.contains('book-button')) {
-    roomToBook = event.target.closest('.room-card').id
-    // let roomNumber = parseInt(roomToBook)
+    roomToBook = event.target.closest('.available-room-container').id
     console.log('roomToBook', roomToBook)
-    newBookingData = {"userID": 2, "date": chosenDate, "roomNumber": roomToBook}
+    if (userType === 'manager') {
+      console.log('this room is being booked for customer', thisUser.id)
+
+      bookARoom(thisUser, roomToBook, chosenDate)
+      console.log(thisUser, roomToBook, chosenDate)
+    }
+    if (userType === 'customer') {
+      console.log('this room is being booked for customer', customerIdToBook)
+      bookARoom(validUser, roomToBook, chosenDate)
+      console.log(validUser, roomToBook, chosenDate)
+      viewCustomerDash();
+    }
+    // bookARoom(idToken)
+  }
+
+  function bookARoom(selectedUser, roomToBook, chosenDate) {
+
+    // console.log(chosenDate)
+    // if (event.target.classList.contains('book-button')) {
+    //   roomToBook = event.target.closest('.available-room-container').id
+    //   // let roomNumber = parseInt(roomToBook)
+    //   console.log('roomToBook', roomToBook)
+    newBookingData = {"userID": selectedUser.id, "date": chosenDate, "roomNumber": roomToBook}
     console.log('newBookingData', newBookingData)
 
     userBooking = new Booking(newBookingData)
-    allSessionBookings.push(userBooking)
-    console.log('allSessionBookings', allSessionBookings)
+    selectedUser.bookings.push(userBooking)
+    console.log('selectedUser Bookings', selectedUser.bookings)
 
     console.log('availableRooms', availableRooms)
     // updateAvailBookings()
@@ -193,10 +282,9 @@ function bookARoom(event) {
     console.log(newRoomCount)
     displayAvailableRooms(availableRooms)
     console.log(availableRooms)
-    // allSessionBookings.push(newRoomCount.number)
-    // updateAvailBookings()
+
     displayNewBooking(userBooking)
-    viewCustomerDash();
+
     //Don't Delete Below! - for API call, POST
     // apiCalls.addBookingData(newBookingData)
   }
@@ -207,6 +295,82 @@ function updateAvailBookings() {
   console.log(availableRooms)
   console.log(allSessionBookings)
   // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
+}
+// MANAGER FUNCTIONALITY: SEARCH USERS AND BOOK -----------------------------------
+function viewUserBookings(event) {
+  w3_close()
+  let bookingsToView = event.target.closest('.customer-card').id
+  // const closestElement = ('.room-card').closest('div');
+  const content = event.target.closest('.collapsible')
+  let bookingsContainer =  content.nextElementSibling;
+
+  if (bookingsContainer.style.display === "block") {
+    bookingsContainer.style.display = "none";
+  } else {
+    bookingsContainer.style.display = "block";
+  }
+
+  let thisCustomer = findCustomer(+bookingsToView)
+  console.log(thisCustomer)
+  let thisCustomersBookings = compileUserBookings(thisCustomer.id)
+  console.log(thisCustomersBookings)
+
+  thisCustomersBookings.forEach(booking => {
+    let customerBooking =
+
+    `
+    <ul class="w3-ul w3-card-4">
+    <li class="w3-display-container">
+    <div class="flexBooking">
+    <div>
+    ${booking.id}
+    </div>
+    <div>
+    ${booking.date}
+    </div>
+    <div>
+    ${booking.roomNumber}
+    </div>
+    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-transparent w3-display-right">&times;</span>
+    </div>
+    </li>
+    </ul>
+    `
+    bookingsContainer.insertAdjacentHTML('beforeEnd', customerBooking)
+  })
+}
+
+function searchCustomersByName(event) {
+  console.log(hotel.allCustomers)
+  let searchNameInput = event.target.value.toLowerCase()
+  console.log(searchNameInput)
+  customerSearchResults = hotel.allCustomers.filter(customer => {
+    return customer.name.toLowerCase().includes(searchNameInput)
+
+  });
+  console.log(customerSearchResults)
+  displayUsers(customerSearchResults);
+}
+
+function bookRoomForCustomer(event) {
+  customerIdToBook = event.target.closest('.customer-card').id
+  thisUser = findCustomer(+customerIdToBook)
+  console.log('Here we goo', customerIdToBook, thisUser)
+  customerBookingHeader.innerText = `${thisUser.name}`
+  w3_open()
+  viewSearchRooms()
+  return thisUser
+  // bookAroom(idToken)
+}
+
+function displaySearchUserError() {
+  let errorCard =
+  `<div class="room-specs">
+  <h3>Sorry! No users match that name</h3>
+  <input type="button" class="booking-btn" value="View Bookings">
+  </div>
+  `
+  document.querySelector('user-list').insertAdjacentHTML('afterbegin', errorCard)
 }
 
 //MOVE TO domUpdates.js ------------------------------------------------
@@ -223,7 +387,6 @@ function displayHotelStats(numberOfRooms, percentBooked, totalRevenue) {
   document.querySelector('.total-rooms').innerHTML = numberOfRooms
   document.querySelector('.percent-booked').innerHTML = `${percentBooked}%`
   document.querySelector('.total-revenue').innerHTML = '$' + totalRevenue
-
 }
 
 function displayTotalSpentOnBookings(customerBookings) {
@@ -238,8 +401,8 @@ function displayAvailableRooms(roomSet) {
     const roomCard =
     `
     <div class="w3-container">
-    <div class="room-card" id=${room.number}>
-    <div class="container">
+    <div class="room-card">
+    <div class="available-room-container" id=${room.number}>
     <div class="room-specs">
     <h3>${room.roomType}</h3>
     <div class="navFlex">
@@ -266,35 +429,86 @@ function displayAvailableRooms(roomSet) {
     `
     roomsDisplay.insertAdjacentHTML('afterbegin', roomCard);
     bookButton = document.querySelector('.book-button');
-    bookButton.addEventListener('click', bookARoom);
+    bookButton.addEventListener('click', selectRoomToBook);
   })
 }
 
 function displayNewBooking(booking) {
   let userBookings = document.querySelector('.user-bookings')
 
-  let bookingCard =
+  let newBookingCard =
   `
-  <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
+  <li class="w3-padding-large" id="${booking.id}"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
   </li>
   `
-  userBookings.insertAdjacentHTML('afterbegin', bookingCard)
+
+
+  userBookings.insertAdjacentHTML('afterbegin', newBookingCard)
 }
 
 function displayCustomerBookings(bookingSet) {
   let userBookings = document.querySelector('.user-bookings')
   sortBookingsByDate(bookingSet)
   bookingSet.forEach(booking => {
+    let bookingCard =
 
-  let bookingCard =
-  `
-  <li class="w3-padding-large"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
-  </li>
-  `
-  userBookings.insertAdjacentHTML('afterbegin', bookingCard)
+    `
+    <li class="w3-padding-large" id="${booking.id}"><span>Date: ${booking.date}, Room Number: ${booking.roomNumber}</span>
+    </li>
+    `
+    userBookings.insertAdjacentHTML('afterbegin', bookingCard)
   })
 }
 
+function displayUsers(users) {
+  console.log(users)
+  usersDocket.innerHTML = ''
+  users.forEach(user => {
+
+    let userCard =
+    `
+    <div class="w3-container">
+    <div class="customer-card collapsible" id=${user.id}>
+    <div class="container">
+    <div class="customer-specs" id=${user.id}>
+    <h3>${user.name}</h3>
+    <div>
+    <input type="button" class="bookings-btn" value="View Bookings">
+    <input type="button" class="book-customer-button" value="Book Room">
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="content">
+    <ul class="w3-ul w3-card-4">
+    <li class="w3-display-container">
+    <div class="flexBooking">
+    <div>
+    <b>Booking ID</b>
+    </div>
+    <div>
+    <b>Booking Date</b>
+    </div>
+    <div>
+    <b>Room Number</b>
+    </div>
+    <div>
+    <b>Delete Booking</b>
+    </div>
+    </div>
+    </li>
+    </ul>
+    </div>
+    </div>
+    `
+
+    usersDocket.insertAdjacentHTML('afterbegin', userCard)
+    viewBookingsBtn = document.querySelector('.bookings-btn');
+    bookForCustomer = document.querySelector('.book-customer-button');
+    viewBookingsBtn.addEventListener('click', viewUserBookings);
+    bookForCustomer.addEventListener('click', bookRoomForCustomer);
+  })
+}
 
 // CUSTOMER and MANAGER DASHBOARD - RETRIEVE DATA FUNCTIONS ------------
 
@@ -321,8 +535,8 @@ function getTotalRevenue() {
 function getRoomsFromBookings(bookings) {
   bookedRooms = bookings.reduce((acc, bookedRoom) => {
     bookedRoom = hotel.allRooms.find(room => bookedRoom.roomNumber === room.number)
-     acc.push(bookedRoom)
-     return acc
+    acc.push(bookedRoom)
+    return acc
   },[])
   return bookedRooms
 }
@@ -342,6 +556,7 @@ function getHotelStatsByDate(date) {
 
   displayHotelStats(numberOfBookedRooms, percentBooked, totalRevenue)
 }
+
 // CUSTOMER
 function findCustomer(idNum) {
   return hotel.allCustomers.find(customer => customer.id === idNum)
@@ -361,7 +576,7 @@ function compileUserBookings(idNum) {
 
 function sortBookingsByDate(bookingSet) {
   let bookingsByDate = bookingSet.sort((bookingA, bookingB) => {
-     return new Date(bookingA.date) - new Date(bookingB.date)
+    return new Date(bookingA.date) - new Date(bookingB.date)
   })
   return bookingsByDate
 }
@@ -389,9 +604,9 @@ function grantAccess(event) {
   let username = loginForm.username.value;
   let password = loginForm.password.value;
 
-  let userType = username.split('').splice(0, 8).join('').toLowerCase();
-  let idToken = parseInt(username.slice([8]));
-  let validUser = findCustomer(idToken)
+  userType = username.split('').splice(0, 8).join('').toLowerCase();
+  idToken = parseInt(username.slice([8]));
+  validUser = findCustomer(idToken)
   console.log(userType, idToken, validUser)
 
   if (password !== 'overlook2020') {
@@ -399,17 +614,22 @@ function grantAccess(event) {
     return;
   }
   if (userType === 'manager') {
+
     alert('You have successfully logged in as a manager.');
-    managerViewHandler()
+    userType = 'manager'
     todayDate = getTodayDate();
     chosenDate = "2020/02/07";
+
+    managerLoginViewHandler();
     getHotelStatsByDate(chosenDate)
+    displayUsers(hotel.allCustomers)
 
   } if (userType === 'customer' && validUser) {
     alert('You have successfully logged in as a customer.');
-    customerViewHandler();
+    customerLoginViewHandler();
 
     const customerBookings = compileUserBookings(validUser.id)
+    userType = 'customer'
     getTotalSpentOnBookings(customerBookings);
     sortBookingsByDate(customerBookings)
     displayCustomerBookings(customerBookings);
@@ -427,8 +647,16 @@ function showLoginErrorMsg() {
 
 function logOut() {
   location.reload()
-
-  // document.getElementById('login-section').style.display = 'flex';
-  // loginForm.username.value = ''
-  // loginForm.password.value = ''
+}
+function w3_open() {
+  viewSearchRooms()
+  document.getElementById("main").style.marginLeft = "25%";
+  document.getElementById("mySidebar").style.width = "25%";
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("openNav").style.display = 'none';
+}
+function w3_close() {
+  document.getElementById("main").style.marginLeft = "0%";
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("openNav").style.display = "inline-block";
 }
