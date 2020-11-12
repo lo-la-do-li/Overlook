@@ -19,6 +19,7 @@ let hotel;
 let userType;
 let idToken;
 let validUser;
+let deleteBtn;
 
 let availableRooms = []
 let currentBookings = []
@@ -269,26 +270,19 @@ function selectRoomToBook(event) {
     console.log('selectedUser Bookings', selectedUser.bookings)
 
     console.log('availableRooms', availableRooms)
-    // updateAvailBookings()
 
     let newRoomCount = availableRooms.splice(availableRooms.findIndex(room => room.number === userBooking.roomNumber), 1)
     console.log(newRoomCount)
     displayAvailableRooms(availableRooms)
     console.log(availableRooms)
-
     displayNewBooking(userBooking)
-
+    apiCalls.addBookingData(newBookingData)
+    instantiateData(dataSet)
     //Don't Delete Below! - for API call, POST
     // apiCalls.addBookingData(newBookingData)
   }
 }
 
-function updateAvailBookings() {
-  // instantiateData(dataSet)
-  console.log(availableRooms)
-  console.log(allSessionBookings)
-  // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
-}
 // MANAGER FUNCTIONALITY: SEARCH USERS AND BOOK -----------------------------------
 function viewUserBookings(event) {
   w3_close()
@@ -307,14 +301,14 @@ function viewUserBookings(event) {
   console.log(thisCustomer)
   let thisCustomersBookings = compileUserBookings(thisCustomer.id)
   console.log(thisCustomersBookings)
-
+  thisCustomersBookings = sortBookingsByDate(thisCustomersBookings)
   thisCustomersBookings.forEach(booking => {
     let customerBooking =
 
     `
     <ul class="w3-ul w3-card-4">
-    <li class="w3-display-container">
-    <div class="flexBooking">
+    <li class="w3-display-container"id=${booking.id}>
+    <div class="flexBooking" id=${booking.id}>
     <div>
     ${booking.id}
     </div>
@@ -324,13 +318,37 @@ function viewUserBookings(event) {
     <div>
     ${booking.roomNumber}
     </div>
-    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-transparent w3-display-right">&times;</span>
+    <button class="delete-btn w3-button w3-transparent w3-display-right">&times;</button>
     </div>
     </li>
     </ul>
     `
-    bookingsContainer.insertAdjacentHTML('beforeEnd', customerBooking)
+    bookingsContainer.insertAdjacentHTML('beforeend', customerBooking)
+    deleteBtn = document.querySelector('.delete-btn')
+    deleteBtn.addEventListener('click', deleteBooking)
   })
+}
+
+function deleteBooking(event) {
+  if (event.target.classList.contains('delete-btn')) {
+  let bookingToDeleteID = event.target.parentElement.closest(".flexBooking").id
+  console.log(bookingToDeleteID)
+
+  let bookingToDelete = hotel.allBookings.find(booking => booking.id === bookingToDeleteID)
+  console.log(bookingToDelete)
+
+let removedBookingData = {"id": bookingToDelete.id}
+console.log(removedBookingData)
+  // onclick="this.parentElement.style.display='none'" --> styling in html
+  // apiCalls.deleteBookingData(removedBookingData)
+  }
+}
+
+function updateAvailBookings() {
+  // instantiateData(dataSet)
+  console.log(availableRooms)
+  console.log(allSessionBookings)
+  // allSessionBookings.forEach(roomNum => availableRooms.splice(availableRooms.findIndex(room => room.number === roomNum),1))
 }
 
 function searchCustomersByName(event) {
@@ -438,9 +456,10 @@ function displayNewBooking(booking) {
 }
 
 function displayCustomerBookings(bookingSet) {
+  instantiateData(dataSet)
   let userBookings = document.querySelector('.user-bookings')
-  sortBookingsByDate(bookingSet)
-  bookingSet.forEach(booking => {
+  let sortedBookingSet = sortBookingsByDate(bookingSet)
+  sortedBookingSet.forEach(booking => {
     let bookingCard =
 
     `
@@ -556,7 +575,6 @@ function displayCustomerName(customer) {
 
 function compileUserBookings(idNum) {
   let customer = findCustomer(idNum)
-  // console.log(customer)
   let foundBookings = hotel.allBookings.filter(booking => customer.id === booking.userId)
   customer.bookings = foundBookings
   // console.log(customer.bookings)
