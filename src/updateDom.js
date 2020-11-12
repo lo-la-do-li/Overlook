@@ -1,7 +1,5 @@
 const updateDom = {
   displayAvailableRooms: (roomSet, element) => {
-    // searchBar.classList.remove('hidden')
-    // roomsDisplay.innerHTML = ''
     roomSet.forEach(room => {
 
       const roomCard =
@@ -34,8 +32,6 @@ const updateDom = {
       </div>
       `
       element.insertAdjacentHTML('afterbegin', roomCard);
-      // bookButton = document.querySelector('.book-button');
-      // bookButton.addEventListener('click', selectRoomToBook);
     })
   }
 }

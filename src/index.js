@@ -270,7 +270,7 @@ function searchAvailableRooms(event) {
       <div>
       ${booking.roomNumber}
       </div>
-      <button class="delete-btn ol-button ol-transparent ol-display-right">&times;</button>
+      <button aria-label="delete-booking-button" class="delete-btn ol-button ol-transparent ol-display-right">&times;</button>
       </div>
       </li>
       </ul>
@@ -282,7 +282,6 @@ function searchAvailableRooms(event) {
   };
 
   function deleteBooking(event) {
-
     if (event.target.classList.contains('delete-btn')) {
       let customerBookingCard = event.target.parentElement.closest(".flexBooking")
       let bookingToDeleteID = event.target.parentElement.closest(".flexBooking").id
@@ -324,7 +323,7 @@ function searchAvailableRooms(event) {
     let errorCard =
     `<div class="room-specs">
     <h3>Sorry! No users match that name</h3>
-    <input type="button" class="booking-btn" value="View Bookings">
+    <input aria-label="book-for-customer-button" type="button" class="booking-btn" value="View Bookings">
     </div>
     `
     document.querySelector('user-list').insertAdjacentHTML('afterbegin', errorCard)
@@ -379,7 +378,7 @@ function searchAvailableRooms(event) {
       <p><b>Cost:</b></p>
       <p>${" $" + room.costPerNight}</p>
       </div>
-      <input type="button" class="book-button" value="Book">
+      <input aria-label="customer-book-button" type="button" class="book-button" value="Book">
       </div>
       </div>
       </div>
@@ -428,8 +427,8 @@ function searchAvailableRooms(event) {
             <div class="customer-specs" id=${user.id}>
             <h3>${user.name}</h3>
             <div>
-            <input type="button" class="bookings-btn" value="View Bookings">
-            <input type="button" class="book-customer-button" value="Book Room">
+            <input aria-label="view-customer-bookings-button" type="button" class="bookings-btn" value="View Bookings">
+            <input aria-label="book-for-customer-btn" type="button" class="book-customer-button" value="Book Room">
           </div>
         </div>
       </div>

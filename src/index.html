@@ -7,13 +7,13 @@
 </head>
 <body>
 <main>
-  <div id="login-section">
+  <div aria-label="login-section" id="login-section">
     <div id="login-holder">
       <h2 id="login-header">Please login</br>to access Overlook</h2>
       <div id="login-error-msg-holder">
         <p id="login-error-msg">Invalid username <span id="error-msg-second-line">and/or password</span></p>
       </div>
-      <form id="login-form">
+      <form aria-label="login-form" id="login-form">
         <input type="text" name="username" id="username-field" class="login-form-field" placeholder="Username">
         <input type="password" name="password" id="password-field" class="login-form-field" placeholder="Password">
         <input type="submit" value="Login" id="login-form-submit">
@@ -22,12 +22,12 @@
   </div>
 
   <div aria-label="dashboard-views" class="dashboard">
-    <div class="ol-sidebar ol-bar-block ol-card ol-animate-left" style="display:none" id="mySidebar">
+    <div aria-label="open-sidebar-button" class="ol-sidebar ol-bar-block ol-card ol-animate-left" style="display:none" id="mySidebar">
       <button aria-label="close-sidebar-button" class="side-bar-close ol-button ol-large"
       >Close &times;</button>
-      <div class="ol-container">
+      <div aria-label="calendar-sidebar-holder"class="ol-container">
         <div class="find-room-card">
-          <div class="calendar-container">
+          <div aria-label="travel-date-picker" class="calendar-container">
             <h2>Find a Room</h2>
             <form>
               <label for="travel-date">Desired Date:</label>
@@ -38,27 +38,21 @@
         </div>
       </div>
     </div>
-
-    <div id="main">
+    <div aria-label="navigation-tab"id="main">
       <div class="ol-teal">
         <div class="navFlex">
-          <button id="openNav" class="ol-button ol-teal ol-xlarge side-bar-btn">&#9776;</button>
-
-          <button class="customer-dash-tab ol-button ol-teal ">Dashboard</button>
-
-          <button class="search-results-tab ol-button ol-teal ">Search Results</button>
-          <button class="search-users-tab ol-button ol-teal hidden">Search Users</button>
-
-
+          <button aria-label="open-sidebar"id="openNav" class="ol-button ol-teal ol-xlarge side-bar-btn">&#9776;</button>
+          <button aria-label="view-dashboard-tab" class="customer-dash-tab ol-button ol-teal ">Dashboard</button>
+          <button aria-label="search-results-tab" class="search-results-tab ol-button ol-teal ">Search Results</button>
+          <button aria-label="search-users-tab" class="search-users-tab ol-button ol-teal hidden">Search Users</button>
           <div class="ol-container navFlex" style="margin-left: auto;">
-            <div class="navFlex">
+            <div aria-label="title-hotel-overlook"class="navFlex">
               <h4>OverLook</h4>
-              <button class="log-out-btn ol-button ol-teal ">Logout</button>
+              <button aria-label="logout-button"class="log-out-btn ol-button ol-teal ">Logout</button>
             </div>
           </div>
         </div>
       </div>
-
       <section class="customer-dashboard">
         <h2 class="welcome-msg"></h2>
         <div class="containFlex">
@@ -72,7 +66,6 @@
               </div>
             </div>
           </div>
-
           <div>
             <div class="card">
               <div class="user-container">
@@ -84,7 +77,6 @@
           </div>
         </div>
       </section>
-
       <section class="manager-dashboard">
         <h2 class="welcome-msg">Welcome Back!</h2>
         <h3 class="describe-dashboard"> Here are today's occupancy and revenue stats:</h3>
