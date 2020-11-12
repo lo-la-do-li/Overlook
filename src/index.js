@@ -233,7 +233,6 @@ function searchAvailableRooms(event) {
       let newRoomCount = availableRooms.splice(availableRooms.findIndex(room => room.number === userBooking.roomNumber), 1);
       displayAvailableRooms(availableRooms);
       displayNewBooking(userBooking);
-      apiCalls.addBookingData(newBookingData);
       // Don't Delete Below! - for API call, POST
       apiCalls.addBookingData(newBookingData)
     };
@@ -486,7 +485,9 @@ function searchAvailableRooms(event) {
   function getRoomsFromBookings(bookings) {
     bookedRooms = bookings.reduce((allRoomsTaken, bookedRoom) => {
       bookedRoom = hotel.allRooms.find(room => bookedRoom.roomNumber === room.number);
-      allRoomsTaken.push(bookedRoom);
+      if (bookedRoom) {
+        allRoomsTaken.push(bookedRoom)
+      }
       return allRoomsTaken;
     },[])
     return bookedRooms;
