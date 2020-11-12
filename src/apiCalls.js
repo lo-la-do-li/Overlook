@@ -17,7 +17,7 @@ const addData = (path, data) => {
 }
 
 const deleteData = (path, data) => {
-  return feth(path, {
+  return fetch(path, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'

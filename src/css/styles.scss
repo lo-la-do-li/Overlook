@@ -202,7 +202,7 @@ button, input, select, textarea, optgroup {
   text-align: center;
 }
 
-.w3-button {
+.w3-button, .delete-btn {
   border: none;
   display: inline-block;
   padding: 8px 16px;
@@ -214,12 +214,6 @@ button, input, select, textarea, optgroup {
   text-align:center;
   cursor: pointer;
   white-space: nowrap;
-  // -webkit-touch-callout: none;
-  // -webkit-user-select: none;
-  // -khtml-user-select: none;
-  // -moz-user-select: none;
-  // -ms-user-select: none;
-  // user-select: none
 }
 .collapsible {
   cursor: pointer;
